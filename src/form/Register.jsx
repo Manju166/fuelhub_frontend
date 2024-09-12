@@ -1,16 +1,23 @@
 import React from 'react';
 import { Form, Input, Button, Select, Typography } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom'; 
+import { useQuery } from '@apollo/client'; // Apollo Client hook for data fetching
+import { GET_TENANTS } from '../graphql/queries'; // Import the tenant query
 import '../styles/register.css';
 
 const { Option } = Select;
 const { Text } = Typography;
 
 const Register = () => {
+  // Fetch tenants using useQuery
+  const { loading, error, data } = useQuery(GET_TENANTS);
+
   const onFinish = (values) => {
     console.log('Received values:', values);
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching tenants: {error.message}</p>;
 
   return (
     <div className="registration">
@@ -58,13 +65,12 @@ const Register = () => {
           className="registration__form-item"
           rules={[{ required: true, message: 'Please select your organization!' }]}
         >
-          <Select
-            placeholder="Select your organization"
-            className="registration__input"
-          >
-            <Option value="org1">Organization 1</Option>
-            <Option value="org2">Organization 2</Option>
-            <Option value="org3">Organization 3</Option>
+          <Select placeholder="Select your organization" className="registration__input">
+            {data.tenants.map((tenant) => (
+              <Option key={tenant.id} value={tenant.id}>
+                {tenant.name}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
 
@@ -77,7 +83,7 @@ const Register = () => {
 
       <div className="registration__login">
         <Text>
-          Already have an account? <Link to="/">Login</Link>
+          Already have an account? <a href="/">Login</a>
         </Text>
       </div>
     </div>

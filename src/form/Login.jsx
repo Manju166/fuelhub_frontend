@@ -2,16 +2,33 @@ import React from 'react';
 import { Form, Input, Button, Select, Typography } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom'; 
+import LOGIN_MUTATION from '../mutations/LoginMutation';
 import '../styles/login.css';
+import { useMutation } from '@apollo/client';
 
 const { Option } = Select;
 const { Text } = Typography;
 
 const Login = () => {
+  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
+
   const onFinish = (values) => {
     console.log('Received values:', values);
+    login({
+      variables: {
+        email: values.email,
+        password: values.password,
+        organizationId: values.organization
+      }
+    });
   };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
+  if (data) {
+    localStorage.setItem('token', data.login.token);
+    return <p>Login successful! Welcome, {data.login.user.email}</p>;
+  }
   return (
     <div className="login">
       <h2 className="login__title">Login</h2>
@@ -29,10 +46,9 @@ const Login = () => {
           rules={[{ required: true, message: 'Please select your organization!' }]}
         >
           <Select placeholder="Select an organization" className="login__select">
-            <Option value="org1">Organization 1</Option>
-            <Option value="org2">Organization 2</Option>
-            <Option value="org3">Organization 3</Option>
-            {/* Add more options as needed */}
+            <Option value="org1">
+              org1
+            </Option>
           </Select>
         </Form.Item>
 

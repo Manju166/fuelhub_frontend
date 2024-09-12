@@ -1,0 +1,49 @@
+/* App.css */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.layout {
+  display: flex;
+  height: 100%;
+}
+
+.sidebar {
+  position: fixed;
+  top: 60px; 
+  left: 0;
+  width: 250px;
+  height: calc(100% - 60px);
+  background-color: inherit;
+  transition: width 0.3s ease;
+  overflow: auto;
+}
+
+.main-content {
+  margin-left: 250px; 
+  margin-top: 60px; 
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.sidebar--dark {
+  background-color: #2f3e46;
+  color: #fff;
+}
+
+.sidebar--light {
+  background-color: #f7f7f7;
+  color: #333;
+}
+
+.main-content--dark {
+  background-color: #2f3e46;
+  color: #fff;
+}
+
+.main-content--light {
+  background-color: #f7f7f7;
+  color: #333;
+}

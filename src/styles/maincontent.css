@@ -1,0 +1,14 @@
+.main-content-container {
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.main-content--dark {
+    background-color: #333;
+    color: #fff;
+}
+
+.main-content--light {
+    background-color: #f0f0f0;
+    color: #000;
+}

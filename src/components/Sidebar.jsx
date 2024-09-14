@@ -2,10 +2,10 @@ import React from 'react';
 import { FaBars, FaTachometerAlt, FaUser, FaCog, FaSignOutAlt, FaBox, FaTruck, FaUserFriends } from 'react-icons/fa';
 import '../styles/sidebar.css';
 import { useTheme } from './ThemeContext'; 
-
+import Logout from '../components/Logout'
+import { Link } from 'react-router-dom';
 function Sidebar() {
-    // eslint-disable-next-line no-unused-vars
-    const { isDarkMode, toggleTheme } = useTheme(); 
+    const { isDarkMode } = useTheme(); 
 
     return (
         <div className={`sidebar ${isDarkMode ? 'sidebar--dark' : 'sidebar--light'}`}>
@@ -30,8 +30,10 @@ function Sidebar() {
                     <span className="sidebar__text">Resources</span>
                 </li>
                 <li className="sidebar__item">
-                    <FaUserFriends className="sidebar__icon" />
-                    <span className="sidebar__text">Consumers</span>
+                <Link to="/consumer" className="sidebar__link">
+                        <FaUserFriends className="sidebar__icon" />
+                        <span className="sidebar__text">Consumers</span>
+                    </Link>
                 </li>
                 <li className="sidebar__item">
                     <FaCog className="sidebar__icon" />
@@ -39,7 +41,9 @@ function Sidebar() {
                 </li>
                 <li className="sidebar__item sidebar__item--logout">
                     <FaSignOutAlt className="sidebar__icon" />
-                    <span className="sidebar__text">Sign out</span>
+                    <span className="sidebar__text">
+                    <Logout/>
+                    </span>
                 </li>
             </ul>
         </div>

@@ -4,6 +4,7 @@ import Login from './form/Login'
 import Dashboard from './pages/Dashboard';
 import { ThemeProvider } from './components/ThemeContext';
 import Register from './form/Register';
+import Consumer from './SidebarComp/Consumer';
 function App() {
   return (
     <ThemeProvider>
@@ -12,6 +13,7 @@ function App() {
         <Route path='/' element={<Login/>} />
         <Route path='/register' element={<Register/>} />
         <Route path='/dashboard' element={<Dashboard/>} />
+        <Route path='/consumer' element={<Consumer/>}/>
       </Routes>
     </BrowserRouter>
     </ThemeProvider>

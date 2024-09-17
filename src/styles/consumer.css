@@ -1,12 +1,11 @@
 /* Container for the entire table and modal */
 .ag-theme-alpine.table-container {
-  height: 50vh;
+  height: 70vh;
   width: 77%;
   position: relative;
   margin: auto;
 }
 
-/* Button to add customers, positioned at the top right */
 .table-container__add-customer-btn {
   position: absolute;
   top: 10px;
@@ -66,9 +65,9 @@
   text-align: center;
 }
 
-form div {
+/* form div {
   margin-bottom: 15px;
-}
+} */
 
 form label {
   display: block;

@@ -6,6 +6,10 @@ import Dashboard from './pages/Dashboard';
 import PrivateRoute from './routes/PrivateRoutes';
 import Register from './form/Register';
 import Consumer from './SidebarComp/Consumer';
+import Maincontent from './components/Maincontent';
+import Resource from './SidebarComp/Resource';
+import CustomerBranch from './SidebarComp/ConsumerBranch';
+import Products from './SidebarComp/Products';
 function App() {
   return (
     <ThemeProvider>
@@ -14,8 +18,12 @@ function App() {
         <Route path='/' element={<Login/>} />
         <Route path='/register' element={<Register/>} />
         <Route element={<PrivateRoute/>}>
-        <Route path='/dashboard' element={<Dashboard/>} />
+        <Route path='/dashboard/*' element={<Dashboard/>} />
+        <Route path='/maincontent' element={<Maincontent/>}/>
+        <Route path='/product' element={<Products/>}/>
         <Route path='/consumer' element={<Consumer/>}/>
+        <Route path="/customerbranch/:id" element={<CustomerBranch />} />
+        <Route path='/resource' element={<Resource/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
@@ -24,3 +32,6 @@ function App() {
 }
 
 export default App
+
+
+

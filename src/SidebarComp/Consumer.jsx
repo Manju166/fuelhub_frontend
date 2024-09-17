@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { AgGridReact } from 'ag-grid-react';
-import { FaEye, FaEdit, FaTrash, FaTimes, FaPlus } from 'react-icons/fa';
+import { FaEye, FaEdit, FaTrash} from 'react-icons/fa';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { GET_CONSUMERS } from '../query/ConsumerQuery';
-import { DELETE_CONSUMER, UPDATE_CONSUMER, CREATE_CONSUMER } from '../mutations/ConsumerMutation';
 import Modal from 'react-modal';
-import '../styles/consumer.css'
+import '../styles/consumer.css';
+import { useAddConsumer, useDeleteConsumer, useEditConsumer } from '../handlers/ConsumerHandler';
+
 Modal.setAppElement('#root');
 
 function Consumer() {
   const { loading, error, data, refetch } = useQuery(GET_CONSUMERS);
-  const [deleteConsumer] = useMutation(DELETE_CONSUMER);
-  const [updateConsumer] = useMutation(UPDATE_CONSUMER);
-  const [createConsumer] = useMutation(CREATE_CONSUMER);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('view');
   const [selectedConsumer, setSelectedConsumer] = useState(null);
   const [formData, setFormData] = useState({ name: '', address: '' });
   const [errorMessage, setErrorMessage] = useState('');
+
+  const handleAdd = useAddConsumer(refetch, setIsModalOpen, setErrorMessage);
+  const handleUpdate = useEditConsumer(refetch, setIsModalOpen, setErrorMessage);
+  const handleDelete = useDeleteConsumer(refetch);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: There was an error fetching the data.</p>;
@@ -48,7 +49,6 @@ function Consumer() {
     },
   ];
 
-  // Handlers for View, Edit, and Delete actions
   const handleView = (consumer) => {
     setSelectedConsumer(consumer);
     setModalMode('view');
@@ -62,96 +62,30 @@ function Consumer() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (consumer) => {
-    const { id } = consumer;
-    try {
-      const { data } = await deleteConsumer({ variables: { input: { id } } });
-      if (data.deleteConsumer.success) {
-        refetch();
-      } else {
-        console.error('Error deleting consumer:', data.deleteConsumer.errors);
-      }
-    } catch (error) {
-      console.error('Error deleting consumer:', error);
-    }
-  };
-
-  // Add Consumer Handler with Validation
-  const handleAdd = async () => {
-    // Validate the form inputs
-    if (!formData.name.trim() || !formData.address.trim()) {
-      setErrorMessage('Name and Address cannot be empty.');
-      return;
-    }
-
-    try {
-      const { data } = await createConsumer({
-        variables: { consumerDetails: { name: formData.name, address: formData.address } },
-      });
-
-      if (data.createConsumer.consumer) {
-        refetch();
-        setIsModalOpen(false); // Close modal after successful addition
-        setErrorMessage(''); // Clear the error message
-      } else {
-        console.error('Error adding consumer:', data.createConsumer.errors);
-      }
-    } catch (error) {
-      console.error('Error adding consumer:', error);
-    }
-  };
-
-  // Update Consumer Handler
-  const handleUpdate = async () => {
-    const { id } = selectedConsumer;
-    if (!formData.name.trim() || !formData.address.trim()) {
-      setErrorMessage('Name and Address cannot be empty.');
-      return;
-    }
-
-    try {
-      const { data } = await updateConsumer({
-        variables: { id, consumerDetails: { name: formData.name, address: formData.address } },
-      });
-
-      if (data.updateConsumer.consumer) {
-        refetch();
-        setIsModalOpen(false); // Close modal after successful update
-        setErrorMessage(''); // Clear the error message
-      } else {
-        console.error('Error updating consumer:', data.updateConsumer.errors);
-      }
-    } catch (error) {
-      console.error('Error updating consumer:', error);
-    }
-  };
-
-  // Open Add Modal
   const openAddModal = () => {
-    setFormData({ name: '', address: '' }); // Clear form for new data
-    setModalMode('add'); // Set modal mode to "add"
+    setFormData({ name: '', address: '' });
+    setModalMode('add');
     setIsModalOpen(true);
-    setErrorMessage(''); // Clear any previous error message
+    setErrorMessage('');
   };
 
   return (
     <div className="ag-theme-alpine table-container">
       <h1>Consumer List</h1>
       
-      {/* Add Customer Button */}
       <button className="table-container__add-customer-btn" onClick={openAddModal}>
-  Add Customer
-</button>
-<AgGridReact
-  rowData={data.consumers}
-  columnDefs={columnDefs}
-  pagination={true}
-  paginationPageSize={10} 
-  paginationPageSizeSelector={[10, 20, 50]}
-/>
+        Add Customer
+      </button>
 
+      <AgGridReact
+        rowData={data.consumers}
+        columnDefs={columnDefs}
+        pagination={true}
+        paginationPageSize={10} 
+        paginationPageSizeSelector={[10, 20, 50]}
+        domLayout='autoheight'
+      />
 
-      {/* Modal Logic */}
       {isModalOpen && (
         <Modal
           isOpen={isModalOpen}
@@ -163,10 +97,8 @@ function Consumer() {
             <h2>{modalMode === 'view' ? 'View Consumer' : modalMode === 'edit' ? 'Edit Consumer' : 'Add Consumer'}</h2>
           </div>
 
-          {/* Error Message */}
           {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-          {/* Modal Body */}
           {modalMode === 'view' ? (
             <div>
               <p><strong>ID:</strong> {selectedConsumer?.id}</p>
@@ -193,9 +125,9 @@ function Consumer() {
               </div>
               <div className="modal-footer">
                 {modalMode === 'add' ? (
-                  <button type="button" onClick={handleAdd}>Add</button>
+                  <button type="button" onClick={() => handleAdd(formData)}>Add</button>
                 ) : (
-                  <button type="button" onClick={handleUpdate}>Update</button>
+                  <button type="button" onClick={() => handleUpdate(selectedConsumer, formData)}>Update</button>
                 )}
                 <button type="button" className="cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
               </div>

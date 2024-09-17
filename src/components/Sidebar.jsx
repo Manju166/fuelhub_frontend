@@ -14,20 +14,26 @@ function Sidebar() {
             </button>
             <ul className="sidebar__content">
                 <li className="sidebar__item">
+                <Link to="/maincontent">
                     <FaTachometerAlt className="sidebar__icon" />
                     <span className="sidebar__text">Dashboard</span>
+                </Link>
                 </li>
                 <li className="sidebar__item">
                     <FaUser className="sidebar__icon" />
                     <span className="sidebar__text">Profile</span>
                 </li>
                 <li className="sidebar__item">
+                <Link to="/product" className='sidebar__link'>
                     <FaBox className="sidebar__icon" />
                     <span className="sidebar__text">Products</span>
+                </Link>
                 </li>
                 <li className="sidebar__item">
+                <Link to="/resource" className='sidebar__link'>
                     <FaTruck className="sidebar__icon" />
                     <span className="sidebar__text">Resources</span>
+                </Link>
                 </li>
                 <li className="sidebar__item">
                 <Link to="/consumer" className="sidebar__link">

@@ -42,6 +42,12 @@ function Sidebar() {
                     </Link>
                 </li>
                 <li className="sidebar__item">
+                <Link to="/order" className="sidebar__link">
+                        <FaUserFriends className="sidebar__icon" />
+                        <span className="sidebar__text">Order Group</span>
+                    </Link>
+                </li>
+                <li className="sidebar__item">
                     <FaCog className="sidebar__icon" />
                     <span className="sidebar__text">Settings</span>
                 </li>

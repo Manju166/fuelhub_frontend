@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { AgGridReact } from 'ag-grid-react';
-import { FaEye, FaEdit, FaTrash} from 'react-icons/fa';
+import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { GET_CONSUMERS } from '../query/ConsumerQuery';
 import Modal from 'react-modal';
 import '../styles/consumer.css';
 import { useAddConsumer, useDeleteConsumer, useEditConsumer } from '../handlers/ConsumerHandler';
+import { useNavigate } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 
 function Consumer() {
+  const navigate = useNavigate();
   const { loading, error, data, refetch } = useQuery(GET_CONSUMERS);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('view');
@@ -47,7 +49,22 @@ function Consumer() {
         </div>
       ),
     },
+    {
+      headerName: 'Branch Detail',
+      field: 'branch',
+      cellRenderer: (params) => (
+        <button
+          onClick={() => handleShowBranches(params.data.id)}
+          className="show-branch-button">
+          Show
+        </button>
+      ),
+    },
   ];
+
+  const handleShowBranches = (consumerId) => {
+    navigate(`/consumerbranch/${consumerId}`);
+  };
 
   const handleView = (consumer) => {
     setSelectedConsumer(consumer);
@@ -69,10 +86,14 @@ function Consumer() {
     setErrorMessage('');
   };
 
+  // const handleRowClick = (params) => {
+  //   const consumerId = params.data.id;
+  //   navigate(`/consumerbranch/${consumerId}`); // Navigate to the branch page with the consumer ID
+  // };
+
   return (
     <div className="ag-theme-alpine table-container">
       <h1>Consumer List</h1>
-      
       <button className="table-container__add-customer-btn" onClick={openAddModal}>
         Add Customer
       </button>
@@ -81,9 +102,11 @@ function Consumer() {
         rowData={data.consumers}
         columnDefs={columnDefs}
         pagination={true}
-        paginationPageSize={10} 
+        paginationPageSize={10}
         paginationPageSizeSelector={[10, 20, 50]}
-        domLayout='autoheight'
+        domLayout="autoHeight"
+        className='table'
+        // onRowClicked={handleRowClick}
       />
 
       {isModalOpen && (

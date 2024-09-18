@@ -1,0 +1,184 @@
+.ag-theme-alpine.table-container {
+    height: 70vh;
+    width: 77%;
+    position: relative;
+    margin: auto;
+  }
+  
+/* Container for the entire table and modal */
+.ag-theme-alpine.table-container {
+    height: 70vh;
+    width: 77%;
+    position: relative;
+    margin: auto;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ag-row {
+    background-color: #ffffff; 
+  }
+  
+  .ag-row:hover {
+    background-color: #f1f1f1; 
+  }
+  
+  .ag-header {
+    background-color: #abb7c5; 
+    color: #fff; 
+  }
+  
+  .ag-header-cell {
+    border-right: 1px solid #d9d9d9; 
+  }
+  
+
+  .table-container__add-resource-btn {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    background-color: rgb(73, 199, 73);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .table-container__add-resource-btn:hover {
+    background-color: rgb(115, 185, 115);
+  }
+  
+  .action-buttons button {
+    padding: 8px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #357abd;
+  }
+  
+  .action-buttons button:hover {
+    color: green;
+  }
+  
+form select.status-available {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+form select.status-unavailable {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+  .show-branch-button {
+    background-color: transparent;
+    color: rgb(241, 83, 9);
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  
+  .ReactModal__Overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .resource-modal {
+    width: 400px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .modal-header h2 {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+  }
+  
+  form label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  form select:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #9fb2c5;
+  }
+  
+  button.cancel {
+    background-color: #777;
+  }
+  
+  button.cancel:hover {
+    background-color: #555;
+  }
+  
+  .modal-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.5rem;
+  }
+  
+  .view-modal .modal-header {
+    border-bottom: none;
+  }
+  
+  .view-modal .modal-footer {
+    display: none;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  .table {
+    margin-top: 2rem;
+  }
+  

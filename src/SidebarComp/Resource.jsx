@@ -4,9 +4,10 @@ import { AgGridReact } from 'ag-grid-react';
 import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { GET_RESOURCES } from '../query/ResourceQuery'; // Import the query
+import { GET_RESOURCES } from '../query/ResourceQuery'; 
 import Modal from 'react-modal';
 import { CREATE_RESOURCE, DELETE_RESOURCE, UPDATE_RESOURCE } from '../mutations/ResourceMutation';
+import '../styles/resource.css'
 
 Modal.setAppElement('#root');
 
@@ -187,8 +188,7 @@ function Resource() {
                 <label>Status</label>
                 <select
                   value={formData.resourceStatus}
-                  onChange={(e) => setFormData({ ...formData, resourceStatus: e.target.value })}
-                >
+                  onChange={(e) => setFormData({ ...formData, resourceStatus: e.target.value })}>
                   <option value="" disabled>Select Status</option>
                   {statusOptions.map((status) => (
                     <option key={status} value={status}>
@@ -197,6 +197,7 @@ function Resource() {
                   ))}
                 </select>
               </div>
+
               <div className="modal-footer">
                 {modalMode === 'add' ? (
                   <button type="button" onClick={() => handleAdd(formData)}>Add</button>

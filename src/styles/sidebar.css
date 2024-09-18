@@ -68,6 +68,32 @@
   font-size: 1rem;
 }
 
+.sidebar__dropdown {
+  padding-left: 20px;
+  list-style: none;
+}
+
+.sidebar__dropdown-item {
+  margin: 5px 0;
+}
+
+.sidebar__caret {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.sidebar__caret.open {
+  transform: rotate(180deg);
+}
+
+/* Optional: Add some hover styles for better UX */
+.sidebar__item:hover,
+.sidebar__dropdown-item:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+
 .sidebar__item--logout {
   margin-top: auto;
   background-color: #d9534f;
@@ -76,6 +102,9 @@
 .sidebar__item--logout:hover {
   background-color: #c9302c;
 }
+
+
+
 
 /* Main content */
 .main-content {

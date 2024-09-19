@@ -15,6 +15,21 @@ export const CREATE_OUTLET = gql`
   }
 `;
 
+export const UPDATE_OUTLET = gql`
+  mutation UpdateOutlet($outletDetails: OutletInput!) {
+    updateOutlet(input: { outletDetails: $outletDetails }) {
+      outlet {
+        name
+        address
+        id
+        consumerId
+      }
+      errors
+      message
+    }
+  }
+`;
+
 export const DELETE_OUTLET = gql`
   mutation DeleteOutlet($id: ID!) {
     deleteOutlet(input: { id: $id }) {
@@ -30,17 +45,3 @@ export const DELETE_OUTLET = gql`
   }
 `;
 
-export const UPDATE_OUTLET = gql`
-  mutation UpdateOutlet($outletDetails: OutletInput!) {
-    updateOutlet(input: { outletDetails: $outletDetails }) {
-      outlet {
-        name
-        address
-        id
-        consumerId
-      }
-      errors
-      message
-    }
-  }
-`;

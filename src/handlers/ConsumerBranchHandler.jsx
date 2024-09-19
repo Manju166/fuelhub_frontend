@@ -1,41 +1,74 @@
 import { useMutation } from '@apollo/client';
-import { CREATE_OUTLET, DELETE_OUTLET, UPDATE_OUTLET } from '../mutations/ConsumerBranchMutation';
+import { CREATE_OUTLET, UPDATE_OUTLET, DELETE_OUTLET } from '../mutations/ConsumerBranchMutation';
 
-export const useAddBranch = (refetch, setIsModalOpen, setErrorMessage) => {
-  const [addBranch] = useMutation(CREATE_OUTLET);
-  return async (formData) => {
-    try {
-      await addBranch({ variables: { input: { name: formData.name, branch: formData.branch, customerId: formData.customerId } } });
-      refetch();  // Refresh the branch list
-      setIsModalOpen(false);  // Close modal
-    } catch (error) {
-      setErrorMessage('Error adding branch: ' + error.message);
+export const useAddOutlet = (refetch, setIsModalOpen, setErrorMessage) => {
+  const [createOutlet] = useMutation(CREATE_OUTLET);
+
+  const handleAdd = async (formData, consumerId) => {
+    const { name, address } = formData;
+
+    if (!name.trim() || !address.trim()) {
+      setErrorMessage('Name and Address cannot be empty.');
+      return;
     }
-    console.log(formData);
+
+    try {
+      const { data } = await createOutlet({
+        variables: { outletDetails: { name, address, consumerId } },
+      });
+
+      if (data.createOutlet.outlet) {
+        refetch();
+        setIsModalOpen(false);
+        setErrorMessage('');
+      } else {
+        setErrorMessage('Failed to add outlet.');
+      }
+    } catch (error) {
+      setErrorMessage('An error occurred while adding the outlet.');
+    }
   };
+
+  return handleAdd;
 };
 
-export const useUpdateBranch = (refetch, setIsModalOpen, setErrorMessage) => {
-  const [updateBranch] = useMutation(UPDATE_OUTLET);
-  return async (branch, formData) => {
+export const useEditOutlet = (refetch, setIsModalOpen, setErrorMessage) => {
+  const [updateOutlet] = useMutation(UPDATE_OUTLET);
+
+  const handleUpdate = async (formData) => {
     try {
-      await updateBranch({ variables: { id: branch.id, input: { name: formData.name, branch: formData.branch } } });
-      refetch();  // Refresh the branch list
-      setIsModalOpen(false);  // Close modal
+      await updateOutlet({
+        variables: {
+          outletDetails: {
+            id: formData.id,
+            name: formData.name,
+            address: formData.address,
+            consumerId: formData.consumerId,
+          },
+        },
+      });
+
+      refetch();
+      setIsModalOpen(false);
     } catch (error) {
-      setErrorMessage('Error updating branch: ' + error.message);
+      setErrorMessage('Failed to update outlet.');
     }
   };
+
+  return handleUpdate;
 };
 
-export const useDeleteBranch = (refetch) => {
-  const [deleteBranch] = useMutation(DELETE_OUTLET);
-  return async (branch) => {
+export const useDeleteOutlet = (refetch) => {
+  const [deleteOutlet] = useMutation(DELETE_OUTLET);
+
+  const handleDelete = async (outlet) => {
     try {
-      await deleteBranch({ variables: { id: branch.id } });
-      refetch();  // Refresh the branch list
-    } catch (error) {
-      console.error('Error deleting branch: ' + error.message);
+      await deleteOutlet({ variables: { id: outlet.id } });
+      refetch();
+    } catch (err) {
+      console.error('Error deleting outlet:', err);
     }
   };
+
+  return handleDelete;
 };

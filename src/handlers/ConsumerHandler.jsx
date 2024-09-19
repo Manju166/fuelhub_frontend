@@ -1,6 +1,5 @@
-// consumerHandlers.js
-import { DELETE_CONSUMER, UPDATE_CONSUMER, CREATE_CONSUMER } from '../mutations/ConsumerMutation';
 import { useMutation } from '@apollo/client';
+import { CREATE_CONSUMER, UPDATE_CONSUMER, DELETE_CONSUMER } from '../mutations/ConsumerMutation';
 
 export const useAddConsumer = (refetch, setIsModalOpen, setErrorMessage) => {
   const [createConsumer] = useMutation(CREATE_CONSUMER);
@@ -13,11 +12,11 @@ export const useAddConsumer = (refetch, setIsModalOpen, setErrorMessage) => {
 
     try {
       const { data } = await createConsumer({
-        variables: { consumerDetails: { name: formData.name, address: formData.address } },
+        variables: { consumerDetails: { name: formData.name, address: formData.address, email: formData.email, phoneNumber: formData.phoneNumber } },
       });
 
       if (data.createConsumer.consumer) {
-        refetch();
+        refetch();  
         setIsModalOpen(false);
         setErrorMessage('');
       } else {
@@ -43,13 +42,14 @@ export const useEditConsumer = (refetch, setIsModalOpen, setErrorMessage) => {
 
     try {
       const { data } = await updateConsumer({
-        variables: { id, consumerDetails: { name: formData.name, address: formData.address } },
+        variables: { id, consumerDetails: { name: formData.name, address: formData.address, email: formData.email, phoneNumber: formData.phoneNumber } },
       });
 
       if (data.updateConsumer.consumer) {
-        refetch();
+        refetch(); 
         setIsModalOpen(false);
         setErrorMessage('');
+        console.log('Consumer updated:', data.updateConsumer.consumer);
       } else {
         console.error('Error updating consumer:', data.updateConsumer.errors);
       }
@@ -68,8 +68,10 @@ export const useDeleteConsumer = (refetch) => {
     const { id } = consumer;
     try {
       const { data } = await deleteConsumer({ variables: { input: { id } } });
+
       if (data.deleteConsumer.success) {
-        refetch();
+        refetch();  // Refetch consumers after deleting
+        console.log('Consumer deleted:', data.deleteConsumer.success);
       } else {
         console.error('Error deleting consumer:', data.deleteConsumer.errors);
       }

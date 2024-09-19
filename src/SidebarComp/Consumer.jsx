@@ -18,7 +18,7 @@ function Consumer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('view');
   const [selectedConsumer, setSelectedConsumer] = useState(null);
-  const [formData, setFormData] = useState({ name: '', address: '' });
+  const [formData, setFormData] = useState({ name: '', address: '', email: '', phoneNumber: '' });
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleAdd = useAddConsumer(refetch, setIsModalOpen, setErrorMessage);
@@ -32,6 +32,8 @@ function Consumer() {
     { headerName: 'ID', field: 'id', sortable: true, filter: true },
     { headerName: 'Name', field: 'name', sortable: true, filter: true },
     { headerName: 'Address', field: 'address', sortable: true, filter: true },
+    { headerName: 'Email', field: 'email', sortable: true, filter: true },
+    { headerName: 'Phone no.', field: 'phoneNumber', sortable: true, filter: true },
     {
       headerName: 'Actions',
       field: 'actions',
@@ -74,22 +76,32 @@ function Consumer() {
 
   const handleEdit = (consumer) => {
     setSelectedConsumer(consumer);
-    setFormData({ name: consumer.name, address: consumer.address });
+    setFormData({ name: consumer.name, address: consumer.address, email: consumer.email, phoneNumber: consumer.phoneNumber });
     setModalMode('edit');
     setIsModalOpen(true);
   };
 
   const openAddModal = () => {
-    setFormData({ name: '', address: '' });
+    setFormData({ name: '', address: '', email: '', phoneNumber: '' });
     setModalMode('add');
     setIsModalOpen(true);
     setErrorMessage('');
   };
 
-  // const handleRowClick = (params) => {
-  //   const consumerId = params.data.id;
-  //   navigate(`/consumerbranch/${consumerId}`); // Navigate to the branch page with the consumer ID
-  // };
+  const isValidPhoneNumber = (phoneNumber) => {
+    const phoneRegex = /^[0-9]*$/; 
+    return phoneRegex.test(phoneNumber);
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    const phoneNumber = e.target.value;
+    if (isValidPhoneNumber(phoneNumber)) {
+      setFormData({ ...formData, phoneNumber });
+      setErrorMessage('');
+    } else {
+      setErrorMessage('Phone number must contain only digits.');
+    }
+  };
 
   return (
     <div className="ag-theme-alpine table-container">
@@ -103,10 +115,8 @@ function Consumer() {
         columnDefs={columnDefs}
         pagination={true}
         paginationPageSize={10}
-        paginationPageSizeSelector={[10, 20, 50]}
         domLayout="autoHeight"
         className='table'
-        // onRowClicked={handleRowClick}
       />
 
       {isModalOpen && (
@@ -127,6 +137,8 @@ function Consumer() {
               <p><strong>ID:</strong> {selectedConsumer?.id}</p>
               <p><strong>Name:</strong> {selectedConsumer?.name}</p>
               <p><strong>Address:</strong> {selectedConsumer?.address}</p>
+              <p><strong>Email:</strong> {selectedConsumer?.email}</p>
+              <p><strong>Phone no. :</strong> {selectedConsumer?.phoneNumber}</p>
             </div>
           ) : (
             <form>
@@ -144,6 +156,22 @@ function Consumer() {
                   type="text"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                />
+              </div>
+              <div>
+                <label>Email</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
+              </div>
+              <div>
+                <label>Phone Number</label>
+                <input
+                  type="text"
+                  value={formData.phoneNumber}
+                  onChange={handlePhoneNumberChange}
                 />
               </div>
               <div className="modal-footer">

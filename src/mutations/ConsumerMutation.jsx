@@ -7,6 +7,8 @@ export const CREATE_CONSUMER = gql`
         name
         address
         tenantId
+        email
+        phoneNumber
       }
       errors
     }
@@ -20,6 +22,8 @@ export const UPDATE_CONSUMER = gql`
         name
         tenantId
         id
+        email
+        phoneNumber
       }
       errors
     }

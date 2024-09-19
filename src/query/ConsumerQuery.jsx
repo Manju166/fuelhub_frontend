@@ -7,6 +7,8 @@ query GetConsumers{
       name
       tenantId
       address
+      email
+      phoneNumber
     }
   }
 `;

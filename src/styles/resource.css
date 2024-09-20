@@ -1,21 +1,8 @@
-.ag-theme-alpine.table-container {
-    height: 70vh;
-    width: 77%;
-    position: relative;
-    margin: auto;
-  }
-  
-/* Container for the entire table and modal */
-.ag-theme-alpine.table-container {
-    height: 70vh;
-    width: 77%;
-    position: relative;
-    margin: auto;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
+.resource{
+  display: flex;
+  justify-content: space-between;
+}
+
   .ag-row {
     background-color: #ffffff; 
   }
@@ -35,19 +22,16 @@
   
 
   .table-container__add-resource-btn {
-    position: absolute;
-    top: 20px;
-    right: 10px;
-    background-color: rgb(73, 199, 73);
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background-color: rgb(73, 199, 73);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
   }
   
   .table-container__add-resource-btn:hover {
@@ -65,16 +49,19 @@
   .action-buttons button:hover {
     color: green;
   }
-  
-form select.status-available {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-form select.status-unavailable {
-  background-color: #f8d7da;
-  color: #721c24;
-}
+  .resource-status-available {
+    color: #28A745;
+    border: 1px dashed #28A745;
+    border-radius: 10px;
+  }
+  .resource-status-unavailable {
+    color: #DC3545;
+    border: 1px dashed #DC3545;
+    border-radius: 10px;
+  }
+  .resource-status-default {
+    color: #FFFFFF;
+  }
 
   .show-branch-button {
     background-color: transparent;

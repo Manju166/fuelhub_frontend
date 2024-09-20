@@ -7,27 +7,32 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 60px;
+    height: 40px;
     background-color: inherit;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
 
 .navbar--dark {
-    background-color: #2f3e46;
-    color: #fff;
+    background-color: black;
+    color: white;
 }
 
 .navbar--light {
-    background-color: #f7f7f7;
-    color: #333;
+    background-color: white;
+    color: black;
 }
 
 .navbar__theme-toggle {
     background: none;
+    color: black;
     border: none;
     cursor: pointer;
     font-size: 1.2rem;
+}
+.navbar--dark .navbar__theme-icon {
+    background-color: black;
+    color: white;
 }
 
 .navbar__search-container {

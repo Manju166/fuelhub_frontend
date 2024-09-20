@@ -1,14 +1,9 @@
-.ag-theme-alpine.table-container {
-  height: 70vh;
-  width: 77%;
-  position: relative;
-  margin: auto;
+.consumer{
+  display: flex;
+  justify-content: space-between;
 }
 
 .table-container__add-customer-btn {
-  position: absolute;
-  top: 20px;
-  right: 1px;
   background-color: rgb(73, 199, 73);
   color: #fff;
   border: none;
@@ -25,6 +20,12 @@
   background-color: rgb(115, 185, 115);
 }
 
+.ag-theme-alpine.table-container {
+  height: 60vh;
+  /* width: 77%; */
+  position: relative;
+  margin: auto;
+}
 .action-buttons button {
   padding: 10px;
   background-color: transparent;
@@ -42,15 +43,6 @@
   font-weight: bold;
 }
 
-.ReactModal__Overlay {
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.table{
-  margin-top: 2rem;
-}
 .consumer-modal {
   width: 400px;
   margin: 100px auto;
@@ -75,10 +67,6 @@
   text-align: center;
 }
 
-/* form div {
-  margin-bottom: 15px;
-} */
-
 form label {
   display: block;
   font-size: 14px;
@@ -87,7 +75,7 @@ form label {
 }
 
 form input {
-  width: calc(100% - 20px); /* Adjust width to fit the container with padding */
+  width: calc(100% - 20px); 
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;

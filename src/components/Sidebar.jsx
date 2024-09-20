@@ -1,65 +1,106 @@
-import React from 'react';
-import { FaBars, FaTachometerAlt, FaUser, FaCog, FaSignOutAlt, FaBox, FaTruck, FaUserFriends } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaTachometerAlt, FaUser, FaCog, FaSignOutAlt, FaBox, FaTruck, FaUserFriends } from 'react-icons/fa';
+import { useTheme } from './ThemeContext';
+import Logout from '../components/Logout';
 import '../styles/sidebar.css';
-import { useTheme } from './ThemeContext'; 
-import Logout from '../components/Logout'
-import { Link } from 'react-router-dom';
-function Sidebar() {
-    const { isDarkMode } = useTheme(); 
 
-    return (
-        <div className={`sidebar ${isDarkMode ? 'sidebar--dark' : 'sidebar--light'}`}>
-            <button className="sidebar__toggle">
-                <FaBars className="sidebar__icon" />
-            </button>
-            <ul className="sidebar__content">
-                <li className="sidebar__item">
-                <Link to="/maincontent">
-                    <FaTachometerAlt className="sidebar__icon" />
-                    <span className="sidebar__text">Dashboard</span>
-                </Link>
-                </li>
-                <li className="sidebar__item">
-                    <FaUser className="sidebar__icon" />
-                    <span className="sidebar__text">Profile</span>
-                </li>
-                <li className="sidebar__item">
-                <Link to="/product" className='sidebar__link'>
-                    <FaBox className="sidebar__icon" />
-                    <span className="sidebar__text">Products</span>
-                </Link>
-                </li>
-                <li className="sidebar__item">
-                <Link to="/resource" className='sidebar__link'>
-                    <FaTruck className="sidebar__icon" />
-                    <span className="sidebar__text">Resources</span>
-                </Link>
-                </li>
-                <li className="sidebar__item">
-                <Link to="/consumer" className="sidebar__link">
-                        <FaUserFriends className="sidebar__icon" />
-                        <span className="sidebar__text">Consumers</span>
-                    </Link>
-                </li>
-                <li className="sidebar__item">
-                <Link to="/order" className="sidebar__link">
-                        <FaUserFriends className="sidebar__icon" />
-                        <span className="sidebar__text">Order Group</span>
-                    </Link>
-                </li>
-                <li className="sidebar__item">
-                    <FaCog className="sidebar__icon" />
-                    <span className="sidebar__text">Settings</span>
-                </li>
-                <li className="sidebar__item sidebar__item--logout">
-                    <FaSignOutAlt className="sidebar__icon" />
-                    <span className="sidebar__text">
-                    <Logout/>
-                    </span>
-                </li>
-            </ul>
-        </div>
-    );
+function Sidebar() {
+  const { isDarkMode } = useTheme();
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const items = [
+    {
+      label: 'Dashboard',
+      icon: <FaTachometerAlt />,
+      key: '/dashboard/',
+    },
+    {
+      label: 'Profile',
+      icon: <FaUser />,
+      key: '/dashboard/profile',
+    },
+    {
+      label: 'Products',
+      icon: <FaBox />,
+      key: '/dashboard/product',
+    },
+    {
+      label: 'Resources',
+      icon: <FaTruck />,
+      key: '/dashboard/resource',
+    },
+    {
+      label: 'Consumers',
+      icon: <FaUserFriends />,
+      key: '/dashboard/consumer',
+    },
+    {
+      label: 'Order Group',
+      icon: <FaUserFriends />,
+      key: '/ordergroup',
+      isDropdown: true,
+      dropdownItems: [
+        { label: 'Order List', key: '/dashboard/orderList' },
+        { label: 'Delivery List', key: '/dashboard/deliveryList' },
+        { label: 'Recurring Orders', key: '/dashboard/recurringOrders' },
+      ],
+    },
+    {
+      label: 'Settings',
+      icon: <FaCog />,
+      key: '/dashboard/settings',
+    },
+  ];
+
+  const handleClick = (key) => {
+    if (!key.isDropdown) {
+      navigate(key);
+    }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  return (
+    <div className={`sidebarpage ${isDarkMode ? 'sidebarpage--dark' : 'sidebarpage--light'}`}>
+      <ul className="sidebarpage__content">
+        {items.map((item, index) => (
+          <li className="sidebarpage__item" key={index}>
+            {item.isDropdown ? (
+              <>
+                <div className="sidebarpage__link" onClick={toggleDropdown}>
+                  {item.icon}
+                  <span className="sidebarpage__text">{item.label}</span>
+                </div>
+                <ul className={`sidebarpage__dropdown ${isDropdownOpen ? 'sidebarpage__dropdown--open' : ''}`}>
+                  {item.dropdownItems.map((dropdownItem, idx) => (
+                    <li className="sidebarpage__dropdown-item" key={idx}>
+                      <Link to={dropdownItem.key}><span className='sidebarpage__dropdown_text'>{dropdownItem.label}</span></Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <div className="sidebarpage__link" onClick={() => handleClick(item.key)}>
+                {item.icon}
+                <span className="sidebarpage__text">{item.label}</span>
+              </div>
+            )}
+          </li>
+        ))}
+        
+        <li className="sidebarpage__item sidebarpage__item--logout">
+          <FaSignOutAlt className="sidebarpage__icon" />
+          <span className="sidebarpage__text">
+            <Logout />
+          </span>
+        </li>
+      </ul>
+    </div>
+  );
 }
 
 export default Sidebar;

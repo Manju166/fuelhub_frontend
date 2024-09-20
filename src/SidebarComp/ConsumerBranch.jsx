@@ -6,7 +6,7 @@ import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
 import Modal from 'react-modal';
 import { GET_OUTLETS } from '../query/ConsumerBranchQuery';
 import { useAddOutlet, useEditOutlet, useDeleteOutlet } from '../handlers/ConsumerBranchHandler';
-
+import '../styles/consumer.css'
 Modal.setAppElement('#root');
 
 function ConsumerBranch() {
@@ -22,7 +22,6 @@ function ConsumerBranch() {
     variables: { id: consumerId },
   });
 
-  // Ensure that refetch is passed after it is initialized by useQuery
   const handleAdd = useAddOutlet(refetch, setIsModalOpen, setErrorMessage);
   const handleUpdate = useEditOutlet(refetch, setIsModalOpen, setErrorMessage);
   const handleDelete = useDeleteOutlet(refetch);
@@ -81,12 +80,13 @@ function ConsumerBranch() {
   };
 
   return (
-    <div className="ag-theme-alpine table-container">
-      <h1>Outlet List for Consumer {consumerId}</h1>
+    <div className='consumerBranch'>
+    <h1>Outlet List for Consumer {consumerId}</h1>
       <button className="table-container__add-branch-btn" onClick={openAddModal}>
         Add Outlet
       </button>
 
+    <div className="ag-theme-alpine table-container">
       <AgGridReact
         rowData={data.outlets.consumerOutlets}
         columnDefs={columnDefs}
@@ -146,6 +146,7 @@ function ConsumerBranch() {
           )}
         </Modal>
       )}
+    </div>
     </div>
   );
 }

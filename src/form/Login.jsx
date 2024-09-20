@@ -20,7 +20,6 @@ const Login = () => {
   const [tenantError, setTenantError] = useState('');
 
   useEffect(() => {
-    // Check if already logged in
     if (localStorage.getItem('token')) {
       navigate('/dashboard');
     }

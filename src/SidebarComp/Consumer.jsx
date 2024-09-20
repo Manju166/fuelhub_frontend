@@ -29,11 +29,11 @@ function Consumer() {
   if (error) return <p>Error: There was an error fetching the data.</p>;
 
   const columnDefs = [
-    { headerName: 'ID', field: 'id', sortable: true, filter: true },
-    { headerName: 'Name', field: 'name', sortable: true, filter: true },
+    { headerName: 'ID', field: 'id', sortable: true, filter: true, width:60 },
+    { headerName: 'Name', field: 'name', sortable: true, filter: true, width:170 },
     { headerName: 'Address', field: 'address', sortable: true, filter: true },
-    { headerName: 'Email', field: 'email', sortable: true, filter: true },
-    { headerName: 'Phone no.', field: 'phoneNumber', sortable: true, filter: true },
+    { headerName: 'Email', field: 'email', sortable: true, filter: true, width:210 },
+    { headerName: 'Phone no.', field: 'phoneNumber', sortable: true, filter: true, width:130 },
     {
       headerName: 'Actions',
       field: 'actions',
@@ -49,7 +49,7 @@ function Consumer() {
             <FaTrash />
           </button>
         </div>
-      ),
+      ), width:145
     },
     {
       headerName: 'Branch Detail',
@@ -60,7 +60,7 @@ function Consumer() {
           className="show-branch-button">
           Show
         </button>
-      ),
+      ), width:130
     },
   ];
 
@@ -104,19 +104,21 @@ function Consumer() {
   };
 
   return (
-    <div className="ag-theme-alpine table-container">
+    <>
       <h1>Consumer List</h1>
+<div className="consumer">
+<div className=""></div>
       <button className="table-container__add-customer-btn" onClick={openAddModal}>
         Add Customer
       </button>
-
+</div>
+    <div className="ag-theme-alpine table-container" style={{width: '100%' }}>
       <AgGridReact
         rowData={data.consumers}
         columnDefs={columnDefs}
         pagination={true}
         paginationPageSize={10}
-        domLayout="autoHeight"
-        className='table'
+        paginationPageSizeSelector={[10, 20, 50]}
       />
 
       {isModalOpen && (
@@ -187,6 +189,7 @@ function Consumer() {
         </Modal>
       )}
     </div>
+    </>
   );
 }
 

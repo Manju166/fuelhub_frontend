@@ -1,178 +1,122 @@
-/* Sidebar styling */
-.sidebar {
-  width: 250px;
+.sidebarpage {
+  width: 220px;
+  height: 100vh;
+  background-color: #f4f4f4;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-.sidebar--open {
-  width: 250px;
+.sidebarpage--dark {
+  background-color: black;
+  color: white;
 }
 
-.sidebar--dark {
-  background-color: #2f3e46;
-  color: #fff;
+.sidebarpage--light {
+  background-color: white;
+  color: black;
 }
 
-.sidebar--light {
-  background-color: #f7f7f7;
-  color: #333;
-}
-
-.sidebar__toggle {
+.sidebarpage__toggle {
   background: none;
   border: none;
   color: inherit;
-  cursor: pointer;
   padding: 10px;
-  font-size: 1.5rem;
+  cursor: pointer;
+  font-size: 20px;
 }
 
-.sidebar__icon {
+.sidebarpage__icon {
+  font-size: 20px;
   margin-right: 10px;
-  font-size: 1.2rem;
 }
 
-.sidebar__content {
+.sidebarpage__content {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #ccc;
 }
 
-.sidebar__item {
-  padding: 15px 20px;
+.sidebarpage__item {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebarpage__item:hover {
+  background-color: #e6e6e6;
+}
+
+.sidebarpage__link {
   display: flex;
   align-items: center;
-  cursor: pointer;
-}
-
-.sidebar__item:hover {
-  background-color: #4a5568;
-}
-
-.sidebar__submenu {
-  list-style: none;
-  padding-left: 20px;
-  display: none;
-}
-
-.sidebar__submenu-item {
-  padding: 10px 0;
-}
-
-.sidebar__submenu-icon {
-  margin-right: 10px;
-}
-
-.sidebar__text,
-.sidebar__submenu-text {
-  font-size: 1rem;
-}
-
-.sidebar__dropdown {
-  padding-left: 20px;
-  list-style: none;
-}
-
-.sidebar__dropdown-item {
-  margin: 5px 0;
-}
-
-.sidebar__caret {
-  margin-left: auto;
-  transition: transform 0.3s ease;
-}
-
-.sidebar__caret.open {
-  transform: rotate(180deg);
-}
-
-/* Optional: Add some hover styles for better UX */
-.sidebar__item:hover,
-.sidebar__dropdown-item:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-}
-
-
-.sidebar__item--logout {
-  margin-top: auto;
-  background-color: #d9534f;
-}
-
-.sidebar__item--logout:hover {
-  background-color: #c9302c;
-}
-
-
-
-
-/* Main content */
-.main-content {
-  padding-left: 250px;
-  transition: all 0.3s ease;
-}
-
-.main-content--dark {
-  background-color: #2f3e46;
-  color: #fff;
-}
-
-.main-content--light {
-  background-color: #f7f7f7;
-  color: #333;
-}
-
-/* Nav styling */
-.nav {
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.nav--dark {
-  background-color: #2f3e46;
-}
-
-.nav--light {
-  background-color: #f7f7f7;
-}
-
-.nav__theme-toggle {
-  background: none;
-  border: none;
   color: inherit;
-  cursor: pointer;
-  font-size: 1.5rem;
+  text-decoration: none;
+  gap: 20px;
 }
 
-.nav__theme-icon {
-  font-size: 1.2rem;
+.sidebarpage__text {
+  font-size: 16px;
+  font-weight: bold;
+  color: orangered;
 }
 
-.nav__right {
-  display: flex;
-  align-items: center;
+.sidebarpage__dropdown {
+  list-style: none;
+  padding-left: 40px;
+  display: none;
+  transition: max-height 0.3s ease-in-out;
+  line-height: 0.5px;
 }
 
-.nav__search-container {
-  position: relative;
+.sidebarpage__dropdown--open {
+  display: block;
 }
 
-.nav__search-input {
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: none;
+.sidebarpage__dropdown-item {
+  padding: 5px;
+  background-color: #f0eded;
+  height: 2vh;
 }
 
-.nav__search-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+.sidebarpage__dropdown_text {
+  font-size: 14px;
 }
 
-.nav__notification-icon,
-.nav__user-icon {
-  margin-left: 20px;
-  font-size: 1.5rem;
+.sidebarpage__dropdown-item a {
+  color: inherit;
+  text-decoration: none;
 }
+
+.sidebarpage__dropdown-item:hover {
+  background-color: #1a1818;
+  color: #ccc;
+}
+.sidebarpage--dark .sidebarpage__dropdown-item{
+  background-color: rgb(19, 16, 16);
+}
+.sidebarpage--dark .sidebarpage__dropdown-item:hover{
+  background-color: rgb(145, 143, 143);
+}
+.sidebarpage__item--settings {
+  margin-top: auto;
+  padding: 15px 15px;
+  border-top: 1px solid #ccc;
+}
+
+.sidebarpage__item--logout {
+  margin-top: 15px;
+  padding: 10px 15px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.sidebarpage__item--logout:hover {
+  background-color: #ff4d4d;
+  color: white;
+}
+

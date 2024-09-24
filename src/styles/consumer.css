@@ -22,7 +22,6 @@
 
 .ag-theme-alpine.table-container {
   height: 60vh;
-  /* width: 77%; */
   position: relative;
   margin: auto;
 }
@@ -131,3 +130,12 @@ button.cancel:hover {
   margin-top: 10px;
   font-size: 14px;
 }
+.consumerheader{
+  display: flex;
+  justify-content: space-between;
+}
+.ag-theme-alpine.table-container{
+  width: 60%;
+  margin: auto;
+}
+

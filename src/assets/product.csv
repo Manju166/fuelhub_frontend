@@ -1,0 +1,6 @@
+category,name,status,unit
+fuel,Petrol,available,liters
+fuel,Diesel,discontinued,gallons
+fuel,Kerosene,out_of_stock,liters
+lubricants,engine_oil,available,gallons
+additives,oil_additive,available,liters

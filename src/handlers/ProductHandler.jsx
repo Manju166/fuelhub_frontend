@@ -45,11 +45,17 @@ export const useEditProduct = (refetch, setIsModalOpen, setErrorMessage) => {
       setErrorMessage("All fields are required.");
       return;
     }
-
+  
     try {
       const { data } = await updateProduct({
-        variables: { productDetails: { id: selectedProduct.id, ...formData } },
+        variables: { 
+          productDetails: { 
+            id: selectedProduct.id, // Ensure the ID is included
+            ...formData 
+          } 
+        },
       });
+  
       if (data.updateProduct.product) {
         refetch();
         setIsModalOpen(false);
@@ -59,9 +65,11 @@ export const useEditProduct = (refetch, setIsModalOpen, setErrorMessage) => {
       }
     } catch (error) {
       console.error("Error updating product:", error);
+      setErrorMessage("An error occurred while updating the product.");
     }
   };
-  return handleUpdate;
+
+  return handleUpdate; // Return handleUpdate so it can be used
 };
 
 export const useDeleteProduct = (refetch) => {

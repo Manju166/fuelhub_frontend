@@ -1,54 +1,42 @@
-import React, { useState } from 'react';
-import Select from 'react-select'; // Optional if using react-select
-import '../../styles/order.css'
-const OrderForm = () => {
-  const [consumerName, setConsumerName] = useState('');
-  const [customerBranch, setCustomerBranch] = useState('');
+import React, { useState, useEffect } from 'react';
+import { useMutation } from '@apollo/client';
+import { CREATE_ORDER_GROUP, UPDATE_ORDER_GROUP } from './orderHandler';
 
-  // Example options for dropdowns
-  const consumerOptions = [
-    { value: 'consumer1', label: 'Consumer 1' },
-    { value: 'consumer2', label: 'Consumer 2' },
-    { value: 'consumer3', label: 'Consumer 3' },
-  ];
+const OrderForm = ({ orderGroup, isEditing, onSave }) => {
+  const [formState, setFormState] = useState({
+    status: orderGroup?.status || '',
+    plannedAt: orderGroup?.plannedAt || '',
+    completedAt: orderGroup?.completedAt || '',
+    consumerId: orderGroup?.consumerId || '',
+    deliveryOrder: {
+      plannedAt: orderGroup?.deliveryOrder?.plannedAt || '',
+      completedAt: orderGroup?.deliveryOrder?.completedAt || '',
+      consumerOutletId: orderGroup?.deliveryOrder?.consumerOutletId || '',
+      lineItems: orderGroup?.deliveryOrder?.lineItems || [],
+    },
+  });
 
-  const branchOptions = [
-    { value: 'branch1', label: 'Branch 1' },
-    { value: 'branch2', label: 'Branch 2' },
-    { value: 'branch3', label: 'Branch 3' },
-  ];
+  const [createOrderGroup] = useMutation(CREATE_ORDER_GROUP);
+  const [updateOrderGroup] = useMutation(UPDATE_ORDER_GROUP);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Consumer Name:', consumerName);
-    console.log('Customer Branch:', customerBranch);
+    const variables = { orderGroupInput: formState };
+
+    if (isEditing) {
+      await updateOrderGroup({ variables: { id: orderGroup.id, ...variables } });
+    } else {
+      await createOrderGroup({ variables });
+    }
+
+    onSave();
   };
 
   return (
-    <div className="order-form">
-      <h2>Order Form</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="consumer-name">Consumer Name:</label>
-          <Select
-            id="consumer-name"
-            options={consumerOptions}
-            onChange={(selectedOption) => setConsumerName(selectedOption.value)}
-            placeholder="Select Consumer"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="customer-branch">Customer Branch:</label>
-          <Select
-            id="customer-branch"
-            options={branchOptions}
-            onChange={(selectedOption) => setCustomerBranch(selectedOption.value)}
-            placeholder="Select Branch"
-          />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      {/* Form fields for status, plannedAt, completedAt, consumerId, deliveryOrder */}
+      <button type="submit">{isEditing ? 'Update Order' : 'Create Order'}</button>
+    </form>
   );
 };
 

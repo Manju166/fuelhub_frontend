@@ -30,9 +30,9 @@ function Resource() {
   if (error) return <p>Error: There was an error fetching the data.</p>;
 
   const columnDefs = [
-    { headerName: 'ID', field: 'id', sortable: true, filter: true },
+    { headerName: 'ID', field: 'id', sortable: true, filter: true,width:80 },
     { headerName: 'Category', field: 'resourceCategory', sortable: true, filter: true },
-    { headerName: 'Status', field: 'resourceStatus', sortable: true, filter: true,
+    { headerName: 'Status', field: 'resourceStatus', sortable: true, filter: true,width:145,
       cellRenderer: (params) => (
         <span
           className={

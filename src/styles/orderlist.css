@@ -1,0 +1,58 @@
+h1{
+  text-align: center;
+}
+.ant-modal {
+  top: 50% !important;  
+  transform: translateY(-50%) !important; 
+}
+
+.ant-modal-content {
+  padding: 20px; 
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 1px solid rgb(83, 83, 82);
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.modal-form-item {
+  margin-bottom: 16px;
+}
+
+.addbtn {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.action-buttons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1890ff; /* Ant Design primary color */
+}
+
+.action-buttons button:hover {
+  color: #40a9ff; /* Slightly lighter on hover */
+}
+
+.line-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.line-item button {
+  margin-left: 10px;
+}

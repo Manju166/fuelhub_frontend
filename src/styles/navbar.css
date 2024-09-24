@@ -22,7 +22,10 @@
     background-color: white;
     color: black;
 }
-
+.navbar img{
+    width: calc(10px + 10vw);
+    height: 9.2vh;
+}
 .navbar__theme-toggle {
     background: none;
     color: black;
@@ -33,24 +36,6 @@
 .navbar--dark .navbar__theme-icon {
     background-color: black;
     color: white;
-}
-
-.navbar__search-container {
-    position: relative;
-}
-
-.navbar__search-input {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.navbar__search-icon {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
 }
 
 .navbar__notification-icon, .navbar__user-icon {

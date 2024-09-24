@@ -1,0 +1,32 @@
+.order-group-form {
+    width: 100%;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .form-item {
+    width: 100%;
+  }
+  
+  .line-item-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+  .ant-modal {
+    top: 65% !important;  
+    transform: translateY(-50%) !important; 
+  }
+
+ 
+

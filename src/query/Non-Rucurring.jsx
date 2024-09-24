@@ -1,35 +1,35 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
-export const GET_ALL_ORDERS = gql`
-query getAllOrders {
-  getAllOrders {
-    orderGroups {
+export const GET_ALL_NONRECURRING = gql`
+query getallnonrecuringorder{
+  getOrderGroups {
+    orderGroup {
       id
       status
       tenantId
       consumerId
       frequency
       recurring
-      deliveryOrder {
+      deliveryOrder{
         id
         consumerOutletId
         plannedAt
         completedAt
-        lineItems {
+        lineItems{
           id
           status
           quantity
           productId
-          product {
+         	product{
             name
             status
             category
             unit
+            status
           }
         }
       }
     }
-    errors
   }
 }
 `;

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { AgGridReact } from 'ag-grid-react';
 import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import { GET_OUTLETS } from '../query/ConsumerBranchQuery';
 import { useAddOutlet, useEditOutlet, useDeleteOutlet } from '../handlers/ConsumerBranchHandler';
@@ -30,7 +31,7 @@ function ConsumerBranch() {
   if (error) return <p>Error: There was an error fetching the data.</p>;
 
   const columnDefs = [
-    { headerName: 'ID', field: 'id', sortable: true, filter: true },
+    { headerName: 'ID', field: 'id', sortable: true, filter: true, width:70 },
     { headerName: 'Name', field: 'name', sortable: true, filter: true },
     { headerName: 'Branch Address', field: 'address', sortable: true, filter: true },
     { headerName: 'Consumer ID', field: 'consumerId', sortable: true, filter: true },
@@ -49,7 +50,7 @@ function ConsumerBranch() {
             <FaTrash />
           </button>
         </div>
-      ),
+      ),width:120
     },
   ];
 
@@ -82,9 +83,14 @@ function ConsumerBranch() {
   return (
     <div className='consumerBranch'>
     <h1>Outlet List for Consumer {consumerId}</h1>
+    <div className="consumerheader">
+    <div className="breadcrumb">
+              <span><Link to='/'>Dashboard</Link></span> / <Link to='/dashboard/consumer'><span >Consumer List</span> </Link>
+            </div>
       <button className="table-container__add-branch-btn" onClick={openAddModal}>
         Add Outlet
       </button>
+    </div>
 
     <div className="ag-theme-alpine table-container">
       <AgGridReact

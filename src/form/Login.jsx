@@ -97,7 +97,7 @@ const Login = () => {
           help={passwordError}
           rules={[
             { required: true, message: 'Please input your password!' },
-            { min: 8, message: 'Password must be at least 8 characters long!' }
+            // { min: 8, message: 'Password must be at least 8 characters long!' }
           ]}
         >
           <Input.Password prefix={<LockOutlined />} placeholder="Enter your password" />

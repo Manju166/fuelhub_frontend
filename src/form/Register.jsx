@@ -77,7 +77,7 @@ const Register = () => {
           label="Password"
           rules={[
             { required: true, message: 'Please input your password!' },
-            { min: 8, message: 'Password must be at least 8 characters long!' },
+            // { min: 8, message: 'Password must be at least 8 characters long!' },
             // Uncomment the following pattern for stronger password rules
             // {
             //   pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,

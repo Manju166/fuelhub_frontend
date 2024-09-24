@@ -11,6 +11,7 @@ import '../styles/dashboard.css';
 import Footer from '../components/Footer';
 import MainContent from '../SidebarComp/MainContent';
 import { useTheme } from '../components/ThemeContext';
+import OrderGroupForm from '../SidebarComp/order/OrderGroupForm';
 
 function Dashboard() {
   const { isDarkMode } = useTheme(); 
@@ -32,6 +33,7 @@ function Dashboard() {
             <Route path='consumer' element={<Consumer />} />
             <Route path='resource' element={<Resource />} />
             <Route path='orderList' element={<OrderList />} />
+            <Route path='ordergroup' element={<OrderGroupForm/>}/>
           </Routes>
         </div>
       </div>

@@ -24,9 +24,106 @@
     margin-top: 10px;
   }
   .ant-modal {
-    top: 65% !important;  
+    top: 85% !important;  
     transform: translateY(-50%) !important; 
   }
-
+  .order-group-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-row {
+    margin-bottom: 15px;
+  }
+  
+  .form-row label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .form-row select,
+  .form-row input[type="date"],
+  .form-row input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .line-items-section {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e9e9e9;
+    border-radius: 4px;
+  }
+  
+  .line-item-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .line-item-row > div {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .line-item-row > div:last-child {
+    margin-right: 0;
+  }
+  
+  .line-item-row select,
+  .line-item-row input[type="number"] {
+    width: 100%;
+  }
+  
+  .line-items-section button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .line-items-section button:hover {
+    background-color: #0056b3;
+  }
+  
+  button[type="submit"] {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #218838;
+  }
+  
+  button[type="button"] {
+    padding: 8px 12px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button[type="button"]:hover {
+    background-color: #c82333;
+  }
+  
  
 

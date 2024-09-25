@@ -5,71 +5,33 @@ import { GET_ALL_ORDERS } from '../../query/OrderListQuery';
 import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import OrderGroupForm from './OrderGroupForm'; // Import the form component
 import '../../styles/orderForm.css';
-import { useOrderHandler } from '../../handlers/OrderHander';
+import { useAddOrder, useDeleteOrder, useEditOrder } from '../../handlers/OrderHandler';
 
 const OrderList = () => {
-  const { loading, error, data } = useQuery(GET_ALL_ORDERS);
-  const { handleCreateOrder, handleUpdateOrder, handleDeleteOrder } = useOrderHandler();
-  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const { loading, error, data, refetch } = useQuery(GET_ALL_ORDERS);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState('view');
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [isAddingOrder, setIsAddingOrder] = useState(false); 
-  
+  const [formData, setFormData] = useState({ status: '', tenantId: '', consumerId: '', frequency: '' });
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleAddOrder = useAddOrder(refetch, setIsModalOpen, setErrorMessage);
+  const handleUpdateOrder = useEditOrder(refetch, setIsModalOpen, setErrorMessage);
+  const handleDeleteOrder = useDeleteOrder(refetch);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-
-  const orderGroups = data.getAllOrders.orderGroups.map(orderGroup => ({
-    id: orderGroup.id,
-    status: orderGroup.status,
-    tenantId: orderGroup.tenantId,
-    consumerId: orderGroup.consumerId,
-    frequency: orderGroup.frequency,
-    recurringStatus: orderGroup.recurring,
-    deliveryOrder: orderGroup.deliveryOrder,
-    lineItems: orderGroup.deliveryOrder?.lineItems || [],
-  }));
-
-  const handleView = (record) => {
-    setSelectedOrder(record);
-    setIsViewModalVisible(true);
-  };
-
-  const handleEdit = (record) => {
-    setSelectedOrder(record);
-    setIsEditModalVisible(true);
-    setIsAddingOrder(false); // For editing
-  };
-
-  const handleAdd = () => {
-    setSelectedOrder(null); // Clear form for adding new order
-    setIsEditModalVisible(true);
-    setIsAddingOrder(true); // For adding
-  };
-
-  const handleDelete = async (record) => {
-    const success = await handleDeleteOrder(record.id, record.recurringStatus);
-    if (success) {
-      // Refresh the order list or handle the UI update as needed
-      console.log('Order deleted successfully');
-    }
-  };
-
-  const handleEditModalSubmit = async (values) => {
-    console.log('Submitted Values:', values); // Log the input data to the console
-    if (isAddingOrder) {
-      await handleCreateOrder(values); // Add the new order
-    } else {
-      await handleUpdateOrder(selectedOrder.id, values); // Update the order
-    }
-    setIsEditModalVisible(false);
-  };
 
   const columns = [
     {
       title: 'Order ID',
       dataIndex: 'id',
       key: 'id',
+    },
+    {
+      title: 'Consumer ID',
+      dataIndex: 'consumerId',
+      key: 'consumerId',
     },
     {
       title: 'Status',
@@ -80,11 +42,6 @@ const OrderList = () => {
       title: 'Tenant ID',
       dataIndex: 'tenantId',
       key: 'tenantId',
-    },
-    {
-      title: 'Consumer ID',
-      dataIndex: 'consumerId',
-      key: 'consumerId',
     },
     {
       title: 'Frequency',
@@ -106,8 +63,8 @@ const OrderList = () => {
           key: 'productId',
           render: (text, record) =>
             record.lineItems
-              ?.map((item) => <span key={item.productId}>{item.productId}</span>)
-              .reduce((prev, curr) => [prev, ', ', curr]) || 'N/A',
+          ?.map((item) => <span key={item.productId}>{item.productId}</span>)
+          .reduce((prev, curr) => [prev, ', ', curr], []) || 'N/A',        
         },
         {
           title: 'Status',
@@ -167,13 +124,48 @@ const OrderList = () => {
           <button onClick={() => handleEdit(record)}>
             <FaEdit />
           </button>
-          <button onClick={() => handleDelete(record)}>
+          <button onClick={() => handleDeleteOrder(record.id, record.recurringStatus)}>
             <FaTrash />
           </button>
         </div>
       ),
     },
   ];
+
+  const orderGroups = data.getAllOrders.orderGroups.map((orderGroup) => ({
+    id: orderGroup.id,
+    status: orderGroup.status,
+    tenantId: orderGroup.tenantId,
+    consumerId: orderGroup.consumerId,
+    frequency: orderGroup.frequency,
+    recurringStatus: orderGroup.recurring,
+    deliveryOrder: orderGroup.deliveryOrder,
+    lineItems: orderGroup.deliveryOrder?.lineItems || [],
+  }));
+
+  const handleView = (record) => {
+    setSelectedOrder(record);
+    setModalMode('view');
+    setIsModalOpen(true);
+  };
+
+  const openAddModal = () => {
+    setFormData({ status: '', tenantId: '', consumerId: '', frequency: '' });
+    setModalMode('add');
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (record) => {
+    setSelectedOrder(record);
+    setFormData({ 
+      status: record.status, 
+      tenantId: record.tenantId, 
+      consumerId: record.consumerId, 
+      frequency: record.frequency 
+    });
+    setModalMode('edit');
+    setIsModalOpen(true);
+  };
 
   const expandedRowRender = (record) => {
     return (
@@ -216,46 +208,40 @@ const OrderList = () => {
   return (
     <div>
       <h1>Order List</h1>
-      <Button type="primary" onClick={handleAdd}>
-        Add New Order
-      </Button>
-      <Table 
-        columns={columns} 
-        dataSource={orderGroups} 
+      <Button type="primary" onClick={openAddModal}>Add Order</Button>
+      <Table
+        columns={columns}
+        dataSource={orderGroups}
         rowKey="id"
         expandable={{
           expandedRowRender: expandedRowRender,
           rowExpandable: (record) => record.lineItems.length > 0,
-        }} 
+        }}
       />
+      {isModalOpen && (
+        <Modal
+          open={isModalOpen}
+          onCancel={() => setIsModalOpen(false)}
+          title={modalMode === 'view' ? 'View Order' : modalMode === 'edit' ? 'Edit Order' : 'Add Order'}
+          footer={null}
+        >
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      {/* View Order Modal */}
-      <Modal
-        title="View Order"
-        visible={isViewModalVisible}
-        onCancel={() => setIsViewModalVisible(false)}
-        footer={null}
-      >
-        {selectedOrder && (
-          <div>
-            <p><strong>Status:</strong> {selectedOrder.status}</p>
-            <p><strong>Consumer ID:</strong> {selectedOrder.consumerId}</p>
-            <p><strong>Tenant ID:</strong> {selectedOrder.tenantId}</p>
-          </div>
-        )}
-      </Modal>
-
-      <Modal
-        title={isAddingOrder ? "Add New Order" : "Edit Order"}
-        visible={isEditModalVisible}
-        onCancel={() => setIsEditModalVisible(false)}
-        footer={null}
-      >
-        <OrderGroupForm
-          initialValues={selectedOrder || {}}
-          onFinish={handleEditModalSubmit}
-        />
-      </Modal>
+          {modalMode === 'view' ? (
+            <div>
+              <p><strong>Status:</strong> {selectedOrder.status}</p>
+              <p><strong>Consumer ID:</strong> {selectedOrder.consumerId}</p>
+              <p><strong>Tenant ID:</strong> {selectedOrder.tenantId}</p>
+            </div>
+          ) : (
+            <OrderGroupForm
+              formData={formData}
+              setFormData={setFormData}
+              onSubmit={modalMode === 'add' ? () => handleAddOrder(formData) : () => handleUpdateOrder(selectedOrder.id, formData)}
+            />
+          )}
+        </Modal>
+      )}
     </div>
   );
 };

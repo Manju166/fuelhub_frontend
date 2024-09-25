@@ -4,7 +4,6 @@ import Sidebar from '../components/Sidebar';
 import { Routes, Route } from 'react-router-dom';
 import Products from '../SidebarComp/Products';
 import Consumer from '../SidebarComp/Consumer';
-import ConsumerBranch from '../SidebarComp/ConsumerBranch';
 import Resource from '../SidebarComp/Resource';
 import OrderList from '../SidebarComp/order/OrderList';
 import '../styles/dashboard.css';
@@ -12,6 +11,7 @@ import Footer from '../components/Footer';
 import MainContent from '../SidebarComp/MainContent';
 import { useTheme } from '../components/ThemeContext';
 import OrderGroupForm from '../SidebarComp/order/OrderGroupForm';
+import Order from '../SidebarComp/Order';
 
 function Dashboard() {
   const { isDarkMode } = useTheme(); 
@@ -34,6 +34,8 @@ function Dashboard() {
             <Route path='resource' element={<Resource />} />
             <Route path='orderList' element={<OrderList />} />
             <Route path='ordergroup' element={<OrderGroupForm/>}/>
+            <Route path='order' element={<Order/>}/>
+
           </Routes>
         </div>
       </div>

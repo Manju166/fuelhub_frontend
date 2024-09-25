@@ -97,83 +97,36 @@ const Products = () => {
     ? data.products.products.filter((product) => product.category === selectedCategory)
     : data.products.products;
 
-  // const handleImportCsv = async () => {
-  //   if (!csvFile) {
-  //     setErrorMessage("Please select a CSV file to upload.");
-  //     return;
-  //   }
-  //   const reader = new FileReader();
-  //   reader.onload = async (event) => {
-  //     const text = event.target.result;
-  //     Papa.parse(text, {
-  //       header: true,
-  //       complete: async (results) => {
-  //         const newProducts = results.data.map((item) => ({
-  //           id: item.id,
-  //           name: item.name,
-  //           category: item.category,
-  //           status: item.status,
-  //           unit: item.unit,
-  //         }));
-  //         console.log(newProducts);
-  //         setProducts((prevProducts) => [...prevProducts, ...newProducts]); // Append to existing products
-  //         setErrorMessage("");
-  //       },
-  //       error: (error) => {
-  //         setErrorMessage(`Parsing failed: ${error.message}`);
-  //       },
-  //     });
-  //   };
-  //   reader.readAsText(csvFile); // Parse the CSV file content
-  // };
   const handleImportCsv = async () => {
     if (!csvFile) {
       setErrorMessage("Please select a CSV file to upload.");
       return;
     }
-  
     const reader = new FileReader();
-  
     reader.onload = async (event) => {
       const text = event.target.result;
-  
-      // Parse the CSV file content
       Papa.parse(text, {
         header: true,
         complete: async (results) => {
           const newProducts = results.data.map((item) => ({
-            name: item.name,          // Ensure the keys match your database schema
+            id: item.id,
+            name: item.name,
             category: item.category,
             status: item.status,
             unit: item.unit,
           }));
-  
-          try {
-            // Assuming your backend has a mutation for adding multiple products
-            const response = await uploadCsv({
-              variables: {
-                input: { products: newProducts }, // Adjust according to your mutation structure
-              },
-            });
-  
-            if (response.data.uploadCsv.success) {
-              refetch(); // Refresh the product list after successful upload
-              setErrorMessage("");
-            } else {
-              setErrorMessage("CSV upload failed: " + response.data.uploadCsv.errors);
-            }
-          } catch (error) {
-            setErrorMessage("Error uploading CSV: " + error.message);
-          }
+          console.log(newProducts);
+          setProducts((prevProducts) => [...prevProducts, ...newProducts]); // Append to existing products
+          setErrorMessage("");
         },
         error: (error) => {
           setErrorMessage(`Parsing failed: ${error.message}`);
         },
       });
     };
-  
-    reader.readAsText(csvFile); // Read the CSV file content
+    reader.readAsText(csvFile); // Parse the CSV file content
   };
+
   
   
 

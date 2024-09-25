@@ -16,10 +16,11 @@ function Sidebar() {
       icon: <FaTachometerAlt />,
       key: '/dashboard/',
     },
+   
     {
-      label: 'Profile',
-      icon: <FaUser />,
-      key: '/dashboard/profile',
+      label: 'Order',
+      icon: <FaBox />,
+      key: '/dashboard/order',
     },
     {
       label: 'Products',

@@ -21,6 +21,7 @@ const Order = () => {
   const [selectedConsumerId, setSelectedConsumerId] = useState(null);
   const [form] = Form.useForm();
   const statusOptions = ["pending", "verified", "unverified"];
+  const lineItemStatus=['scheduled','skipped','delivered'];
   const { data: consumersData } = useQuery(GET_CONSUMERS);
   const { data: outletsData } = useQuery(GET_OUTLETS, {
 variables: { id: selectedConsumerId },
@@ -74,9 +75,8 @@ variables: { id: selectedConsumerId },
           title: 'Product ID',
           key: 'productId',
           render: (text, record) =>
-            record.lineItems
-              ?.map((item) => <span key={item.productId}>{item.productId}</span>)
-              .reduce((prev, curr) => [prev, ', ', curr], []) || 'N/A',
+            record.lineItems?.map((item) => <span key={item.productId}>{item.productId}</span>)
+            .reduce((prev, curr) => [prev, ', ', curr], []) || 'N/A',
         },
         {
           title: 'Status',
@@ -94,6 +94,7 @@ variables: { id: selectedConsumerId },
         },
       ],
     },
+    
     {
       title: 'Delivery Order',
       key: 'deliveryOrder',
@@ -157,7 +158,7 @@ variables: { id: selectedConsumerId },
     lineItems: orderGroup.deliveryOrder?.lineItems || [],
   }));
   const handleLineItemChange = (index, field, value) => {
-    const lineItems = form.getFieldValue('lineItems');
+    const lineItems = form.getFieldValue('lineItemsAttributes');
     const updatedLineItems = [...lineItems];
     updatedLineItems[index] = { ...updatedLineItems[index], [field]: value };
     form.setFieldsValue({ lineItems: updatedLineItems });
@@ -203,102 +204,145 @@ variables: { id: selectedConsumerId },
   };
 
   const onFinish = (values) => {
-    console.log('Form Values:', values); // Log form values to debug
+    console.log('Form Values:', values);
+    
+    // Validate if lineItems field exists and has values
+    // if (!Array.isArray(values.lineItems) || values.lineItems.length === 0) {
+    //     console.error('No line items provided');
+    //     return;
+    // }
+
     if (modalMode === 'add') {
-      handleCreateOrder(values);
+        handleCreateOrder(values);
     } else if (modalMode === 'edit') {
-      handleUpdateOrder(values);
+        handleUpdateOrder(values);
     }
-    setIsModalOpen(false); // Close modal after operation
-  };
-  const handleCreateOrder = async (values) => {
-    try {
-        // Log formatted date values
-        const formattedValues = {
-            ...values,
-            plannedAt: values.plannedAt ? values.plannedAt.toISOString() : null,
-            completedAt: values.completedAt ? values.completedAt.toISOString() : null,
-            deliveryOrderAttributes: {
-                ...values.deliveryOrderAttributes,
-                plannedAt: values.deliveryOrderAttributes.plannedAt ? values.deliveryOrderAttributes.plannedAt.toISOString() : null,
-                completedAt: values.deliveryOrderAttributes.completedAt ? values.deliveryOrderAttributes.completedAt.toISOString() : null,
-            }
-        };
-
-        console.log('Formatted Order Values:', formattedValues); // Log formatted values for debugging
-
-        const { data } = await createOrder({
-            variables: {
-                orderGroupInput: {
-                    status: formattedValues.status,
-                    plannedAt: formattedValues.plannedAt,
-                    completedAt: formattedValues.completedAt,
-                    consumerId: formattedValues.consumerId,
-                    frequency: formattedValues.frequency,
-                    recurring: formattedValues.recurring,
-                    deliveryOrderAttributes: {
-                        plannedAt: formattedValues.deliveryOrderAttributes.plannedAt,
-                        completedAt: formattedValues.deliveryOrderAttributes.completedAt,
-                        consumerOutletId: formattedValues.deliveryOrderAttributes.consumerOutletId,
-                        lineItemsAttributes: Array.isArray(formattedValues.lineItems) ? formattedValues.lineItems.map(item => ({
-                            productId: item.productId,
-                            quantity: item.quantity,
-                            status: item.status,
-                        })) : [],
-                    },
-                },
-            },
-        });
-
-        console.log('Order created:', data.createOrderGroup.orderGroup);
-        refetch(); // Refetch to update the order list
-    } catch (error) {
-        console.error('Error creating order:', error);
-    }
+    
+    setIsModalOpen(false); 
 };
 
-  const handleUpdateOrder = async (values) => {
-    try {
-      const { data } = await updateOrder({
-        variables: {
-          id: selectedOrder.id,
-          orderGroupInput: {
-            status: values.status,
-            plannedAt:values.plannedAt,
-            completedAt:values.completedAt,
-            consumerId: values.consumerId,
-            frequency: values.frequency,
-            recurring: values.recurring,
-            deliveryOrder: {
-              plannedAt: values.deliveryOrderAttributes.plannedAt,
-              completedAt: values.deliveryOrderAttributes.completedAt,
-              consumerOutletId: values.deliveryOrderAttributes.consumerOutletId,
-            },
-            lineItems: values.lineItems.map(item => ({
-              productId: item.productId,
-              quantity: item.quantity,
-              status: item.status,
-            })),
-            startDate: values.startDate,
-            endDate: values.endDate,
+
+const handleCreateOrder = async (values) => {
+  try {
+      const lineItems = values.lineItems || []; // Ensure lineItems is an array
+      const missingStatusItems = lineItems.filter(item => !item.status);
+      if (missingStatusItems.length > 0) {
+          throw new Error(`All line items must have a status. Missing: ${JSON.stringify(missingStatusItems)}`);
+      }
+      
+      const formattedValues = {
+          ...values,
+          plannedAt: values.plannedAt ? values.plannedAt.toISOString() : null,
+          completedAt: values.completedAt ? values.completedAt.toISOString() : null,
+          deliveryOrderAttributes: {
+              ...values.deliveryOrderAttributes,
+              plannedAt: values.deliveryOrderAttributes.plannedAt ? values.deliveryOrderAttributes.plannedAt.toISOString() : null,
+              completedAt: values.deliveryOrderAttributes.completedAt ? values.deliveryOrderAttributes.completedAt.toISOString() : null,
+              lineItemsAttributes: values.lineItemsAttributes.map(item => ({
+                  productId: parseInt(item.productId, 10),
+                  quantity: parseInt(item.quantity, 10),
+                  status: item.status,
+              })),
           },
-        },
+      };
+
+      console.log('Formatted Values:', formattedValues);
+
+      const { data } = await createOrder({
+          variables: {
+              orderGroupInput: formattedValues,
+          },
       });
-  
-      // Optionally, handle the response or update UI state
-      console.log('Order updated:', data.updateOrderGroup.orderGroup);
-    } catch (error) {
-      console.error('Error updating order:', error);
-    }
-  };
-  
-  
+
+      console.log('Order created:', data.createOrderGroup.orderGroup);
+      refetch();
+  } catch (error) {
+      console.error('Error creating order:', error);
+  }
+};
+
+
+
+const handleUpdateOrder = async (values) => {
+  try {
+    const formattedValues = {
+      status: values.status,
+      consumerId: values.consumerId,
+      frequency: values.frequency,
+      plannedAt: values.plannedAt?.toISOString(),
+      completedAt: values.completedAt?.toISOString(),
+      deliveryOrderAttributes: {
+        consumerOutletId: values.deliveryOrderAttributes?.consumerOutletId || null,
+        plannedAt: values.deliveryOrderAttributes?.plannedAt?.toISOString(),
+        completedAt: values.deliveryOrderAttributes?.completedAt?.toISOString(),
+        lineItemsAttributes: values.lineItems.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          status: item.status,
+        })),
+      },
+    };
+
+    const { data } = await updateOrder({
+      variables: { 
+        id: selectedOrder.id,
+        orderGroupInput: formattedValues 
+      }
+    });
+
+    console.log('Order updated:', data.updateOrderGroup.orderGroup);
+    refetch();
+  } catch (error) {
+    console.error('Error updating order:', error);
+  }
+};
+
+const expandedRowRender = (record) => {
+  return (
+    <div>
+      <h4>Line Items</h4>
+      <Table
+        columns={[
+          {
+            title: 'Product Name',
+            dataIndex: 'product',
+            render: (product) => product?.name || 'N/A',
+            width: 200,
+          },
+          {
+            title: 'Status',
+            dataIndex: 'product',
+            render: (product) => product?.status || 'N/A',
+            width: 200,
+          },
+          {
+            title: 'Category',
+            dataIndex: 'product',
+            render: (product) => product?.category || 'N/A',
+            width: 200,
+          },
+          {
+            title: 'Unit',
+            dataIndex: 'product',
+            render: (product) => product?.unit || 'N/A',
+          },
+        ]}
+        dataSource={record.lineItems}
+        pagination={false}
+        rowKey="id"
+      />
+    </div>
+  );
+};
 
   return (
     <div>
       <h1>Order List</h1>
       <Button type="primary" onClick={handleAddOrder} icon={<PlusOutlined />}>Add Order</Button>
-      <Table columns={columns} dataSource={orderGroups} rowKey="id" />
+      <Table columns={columns} dataSource={orderGroups} rowKey="id" expandable={{
+          expandedRowRender: expandedRowRender,
+          rowExpandable: (record) => record.lineItems.length > 0,
+        }}/>
       <Modal
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
@@ -317,7 +361,6 @@ variables: { id: selectedConsumerId },
             <p><strong>Status:</strong> {selectedOrder?.status}</p>
             <p><strong>Consumer ID:</strong> {selectedOrder?.consumerId}</p>
             <p><strong>Tenant ID:</strong> {selectedOrder?.tenantId}</p>
-            {/* Add any other order details you want to display here */}
           </div>
         ) : (
           <Form
@@ -390,7 +433,7 @@ variables: { id: selectedConsumerId },
             <Form.Item label="Completed At" name={['deliveryOrderAttributes', 'completedAt']} rules={[{ required: true }]}>
               <DatePicker format="YYYY-MM-DD HH:mm:ss" showTime required />
             </Form.Item>
-            <Form.Item label="Consumer Outlet" name="consumerOutletId" rules={[{ required: true }]}>
+            <Form.Item label="Consumer Outlet" name={['deliveryOrderAttributes', 'consumerOutletId']} rules={[{ required: true }]}>
         <Select placeholder="Select Outlet" disabled={!selectedConsumerId}>
           {outletsData?.outlets?.consumerOutlets.map((outlet) => (
             <Select.Option key={outlet.id} value={outlet.id}>
@@ -402,7 +445,7 @@ variables: { id: selectedConsumerId },
             <Divider />
 
             <h4>Line Items</h4>
-            <Form.List name="lineItems">
+            <Form.List name="lineItemsAttributes">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, fieldKey, ...restField }) => (
@@ -420,13 +463,13 @@ variables: { id: selectedConsumerId },
                         <Input placeholder="Quantity" type="number" />
                       </Form.Item>
                       <Form.Item {...restField} name={[name, 'status']} fieldKey={[fieldKey, 'status']} rules={[{ required: true, message: 'Missing status' }]}>
-                        <Select placeholder="Select Status" required>
-                        {productsData?.products.products.map((product) => (
-                  <Select.Option key={product.id} value={product.id}>
-                    {product.status}
-                  </Select.Option>
+                      <Select placeholder="Select Status" required>
+                {lineItemStatus.map((status) => (
+                  <Option key={status} value={status}>
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </Option>
                 ))}
-                        </Select>
+              </Select>
                       </Form.Item>
                       <Button type="link" onClick={() => remove(name)}>Remove</Button>
                     </Space>

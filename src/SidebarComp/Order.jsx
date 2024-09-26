@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { Table, Modal, Button, Form, Input, Select, DatePicker, Space, Divider, Radio } from 'antd';
 import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import { PlusOutlined } from '@ant-design/icons';
 import { GET_ALL_ORDERS } from '../query/OrderListQuery';
 import moment from 'moment';
-import { CREATE_ORDER, DELETE_ORDER, UPDATE_ORDER } from '../mutations/OrderMutation';
+import { CREATE_ORDER, UPDATE_ORDER } from '../mutations/OrderMutation';
 import { GET_CONSUMERS } from '../query/ConsumerQuery';
 import { GET_OUTLETS } from '../query/ConsumerBranchQuery';
 import { GET_PRODUCTS } from '../query/ProductQuery';
@@ -171,7 +171,7 @@ variables: { id: selectedConsumerId },
   };
 
   const handleEdit = (record) => {
-   setSelectedOrder(record);
+    setSelectedOrder(record);
     setModalMode('edit');
     setIsModalOpen(true);
     
@@ -187,13 +187,10 @@ variables: { id: selectedConsumerId },
         completedAt: record.deliveryOrder.completedAt ? moment(record.deliveryOrder.completedAt) : null,
         consumerOutletId: record.deliveryOrder.consumerOutletId,
       },
-      lineItems: record.lineItems.map(item => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        status: item.status,
-      })),
+      lineItems: record.lineItems || [],  
     });
-  };
+ };
+ 
   
 
   const handleAddOrder = () => {
@@ -206,11 +203,6 @@ variables: { id: selectedConsumerId },
   const onFinish = (values) => {
     console.log('Form Values:', values);
     
-    // Validate if lineItems field exists and has values
-    // if (!Array.isArray(values.lineItems) || values.lineItems.length === 0) {
-    //     console.error('No line items provided');
-    //     return;
-    // }
 
     if (modalMode === 'add') {
         handleCreateOrder(values);
@@ -238,7 +230,7 @@ const handleCreateOrder = async (values) => {
               ...values.deliveryOrderAttributes,
               plannedAt: values.deliveryOrderAttributes.plannedAt ? values.deliveryOrderAttributes.plannedAt.toISOString() : null,
               completedAt: values.deliveryOrderAttributes.completedAt ? values.deliveryOrderAttributes.completedAt.toISOString() : null,
-              lineItemsAttributes: values.lineItemsAttributes.map(item => ({
+              lineItemsAttributes: values.line.map(item => ({
                   productId: parseInt(item.productId, 10),
                   quantity: parseInt(item.quantity, 10),
                   status: item.status,
@@ -265,6 +257,8 @@ const handleCreateOrder = async (values) => {
 
 const handleUpdateOrder = async (values) => {
   try {
+    const lineItemsAttributes = Array.isArray(values.lineItems) ? values.lineItems : [];
+
     const formattedValues = {
       status: values.status,
       consumerId: values.consumerId,
@@ -275,7 +269,7 @@ const handleUpdateOrder = async (values) => {
         consumerOutletId: values.deliveryOrderAttributes?.consumerOutletId || null,
         plannedAt: values.deliveryOrderAttributes?.plannedAt?.toISOString(),
         completedAt: values.deliveryOrderAttributes?.completedAt?.toISOString(),
-        lineItemsAttributes: values.lineItems.map(item => ({
+        lineItemsAttributes: lineItemsAttributes.map(item => ({
           productId: item.productId,
           quantity: item.quantity,
           status: item.status,
@@ -296,6 +290,7 @@ const handleUpdateOrder = async (values) => {
     console.error('Error updating order:', error);
   }
 };
+
 
 const expandedRowRender = (record) => {
   return (

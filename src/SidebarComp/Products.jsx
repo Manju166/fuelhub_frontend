@@ -6,16 +6,17 @@ import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "react-modal";
 import "../styles/product.css";
 import { GET_PRODUCTS } from "../query/ProductQuery";
-import { useAddProduct, useDeleteProduct, useEditProduct } from "../handlers/ProductHandler";
-import { UPLOAD_CSV } from "../mutations/ProductCsvMutation";
-import Papa from "papaparse";
+import {
+  useAddProduct,
+  useDeleteProduct,
+  useEditProduct,
+} from "../handlers/ProductHandler";
 
 Modal.setAppElement("#root");
 
 const Products = () => {
   const { loading, error, data, refetch } = useQuery(GET_PRODUCTS);
-  const [uploadCsv] = useMutation(UPLOAD_CSV); // Mutation hook
-  const [products, setProducts] = useState([]); // State for products
+  const [products, setProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("view");
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -27,18 +28,10 @@ const Products = () => {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [csvFile, setCsvFile] = useState(null); // State for the CSV file
 
   const handleAdd = useAddProduct(refetch, setIsModalOpen, setErrorMessage);
   const handleUpdate = useEditProduct(refetch, setIsModalOpen, setErrorMessage);
   const handleDelete = useDeleteProduct(refetch);
-
-  const handleCsvChange = (event) => {
-    setCsvFile(event.target.files[0]);
-  };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
 
   const categoryOptions = [
     { value: "", label: "Select Category" },
@@ -50,8 +43,13 @@ const Products = () => {
   const unitOptions = ["liters", "gallons"];
 
   const columnDefs = [
-    { headerName: "ID", field: "id", sortable: true, filter: true, width: 90 },
-    { headerName: "Name", field: "name", sortable: true, filter: true, width: 155 },
+    {
+      headerName: "Name",
+      field: "name",
+      sortable: true,
+      filter: true,
+      width: 250,
+    },
     { headerName: "Category", field: "category", sortable: true, filter: true },
     { headerName: "Status", field: "status", sortable: true, filter: true },
     { headerName: "Unit", field: "unit", sortable: true, filter: true },
@@ -60,9 +58,15 @@ const Products = () => {
       field: "actions",
       cellRenderer: (params) => (
         <div className="action-buttons">
-          <button onClick={() => handleView(params.data)}><FaEye /></button>
-          <button onClick={() => handleEdit(params.data)}><FaEdit /></button>
-          <button onClick={() => handleDelete(params.data)}><FaTrash /></button>
+          <button onClick={() => handleView(params.data)}>
+            <FaEye />
+          </button>
+          <button onClick={() => handleEdit(params.data)}>
+            <FaEdit />
+          </button>
+          <button onClick={() => handleDelete(params.data)}>
+            <FaTrash />
+          </button>
         </div>
       ),
     },
@@ -94,42 +98,13 @@ const Products = () => {
   };
 
   const filteredProducts = selectedCategory
-    ? data.products.products.filter((product) => product.category === selectedCategory)
+    ? data.products.products.filter(
+        (product) => product.category === selectedCategory
+      )
     : data.products.products;
 
-  const handleImportCsv = async () => {
-    if (!csvFile) {
-      setErrorMessage("Please select a CSV file to upload.");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const text = event.target.result;
-      Papa.parse(text, {
-        header: true,
-        complete: async (results) => {
-          const newProducts = results.data.map((item) => ({
-            id: item.id,
-            name: item.name,
-            category: item.category,
-            status: item.status,
-            unit: item.unit,
-          }));
-          console.log(newProducts);
-          setProducts((prevProducts) => [...prevProducts, ...newProducts]); // Append to existing products
-          setErrorMessage("");
-        },
-        error: (error) => {
-          setErrorMessage(`Parsing failed: ${error.message}`);
-        },
-      });
-    };
-    reader.readAsText(csvFile); // Parse the CSV file content
-  };
-
-  
-  
-
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
   return (
     <>
       <h1>Product List</h1>
@@ -149,23 +124,20 @@ const Products = () => {
             ))}
           </select>
         </div>
-        <button className="table-container__add-product-btn" onClick={openAddModal}>
+        <button
+          className="table-container__add-product-btn"
+          onClick={openAddModal}
+        >
           Add Product
-        </button>
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleCsvChange}
-          className="table-container__csv-input"
-        />
-        <button className="table-container__csv-btn" onClick={handleImportCsv}>
-          Import CSV
         </button>
       </div>
 
-      <div className="ag-theme-alpine table-container" style={{ width: "100%" }}>
+      <div
+        className="ag-theme-alpine table-container"
+        style={{ width: "100%" }}
+      >
         <AgGridReact
-          rowData={[...filteredProducts, ...products]} // Combine products from API and CSV
+          rowData={[...filteredProducts, ...products]}
           columnDefs={columnDefs}
           pagination={true}
           paginationPageSize={10}
@@ -176,21 +148,41 @@ const Products = () => {
           <Modal
             isOpen={isModalOpen}
             onRequestClose={() => setIsModalOpen(false)}
-            contentLabel={modalMode === "view" ? "View Product" : modalMode === "edit" ? "Edit Product" : "Add Product"}
+            contentLabel={
+              modalMode === "view"
+                ? "View Product"
+                : modalMode === "edit"
+                ? "Edit Product"
+                : "Add Product"
+            }
             className="product-modal"
           >
             <div className="modal-header">
-              <h2>{modalMode === "view" ? "View Product" : modalMode === "edit" ? "Edit Product" : "Add Product"}</h2>
+              <h2>
+                {modalMode === "view"
+                  ? "View Product"
+                  : modalMode === "edit"
+                  ? "Edit Product"
+                  : "Add Product"}
+              </h2>
             </div>
 
             {errorMessage && <p className="error-message">{errorMessage}</p>}
 
             {modalMode === "view" ? (
               <div>
-                <p><strong>Name:</strong> {selectedProduct?.name}</p>
-                <p><strong>Category:</strong> {selectedProduct?.category}</p>
-                <p><strong>Status:</strong> {selectedProduct?.status}</p>
-                <p><strong>Unit:</strong> {selectedProduct?.unit}</p>
+                <p>
+                  <strong>Name:</strong> {selectedProduct?.name}
+                </p>
+                <p>
+                  <strong>Category:</strong> {selectedProduct?.category}
+                </p>
+                <p>
+                  <strong>Status:</strong> {selectedProduct?.status}
+                </p>
+                <p>
+                  <strong>Unit:</strong> {selectedProduct?.unit}
+                </p>
               </div>
             ) : (
               <form>
@@ -199,14 +191,18 @@ const Products = () => {
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                   />
                 </div>
                 <div>
                   <label>Category</label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                   >
                     {categoryOptions.map((category) => (
                       <option key={category.value} value={category.value}>
@@ -219,11 +215,17 @@ const Products = () => {
                   <label>Status</label>
                   <select
                     value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, status: e.target.value })
+                    }
                   >
-                    <option value="" disabled>Select status</option>
+                    <option value="" disabled>
+                      Select status
+                    </option>
                     {statusOptions.map((status) => (
-                      <option key={status} value={status}>{status}</option>
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -231,24 +233,31 @@ const Products = () => {
                   <label>Unit</label>
                   <select
                     value={formData.unit}
-                    onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, unit: e.target.value })
+                    }
                   >
-                    <option value="" disabled>Select unit</option>
+                    <option value="" disabled>
+                      Select unit
+                    </option>
                     {unitOptions.map((unit) => (
-                      <option key={unit} value={unit}>{unit}</option>
+                      <option key={unit} value={unit}>
+                        {unit}
+                      </option>
                     ))}
                   </select>
                 </div>
                 <button
-  type="submit"
-  onClick={(e) => {
-    e.preventDefault();
-    modalMode === "add" ? handleAdd(formData) : handleUpdate(selectedProduct, formData); // Pass selectedProduct
-  }}
->
-  {modalMode === "add" ? "Add" : "Update"} Product
-</button>
-
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    modalMode === "add"
+                      ? handleAdd(formData)
+                      : handleUpdate(selectedProduct, formData);
+                  }}
+                >
+                  {modalMode === "add" ? "Add" : "Update"} Product
+                </button>
               </form>
             )}
           </Modal>

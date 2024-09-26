@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { FaTachometerAlt, FaUser, FaCog, FaSignOutAlt, FaBox, FaTruck, FaUserFriends,FaCaretDown , FaList, FaListUl } from 'react-icons/fa';
-import { useTheme } from './ThemeContext';
-import Logout from '../components/Logout';
-import '../styles/sidebar.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  FaTachometerAlt,
+  FaCog,
+  FaSignOutAlt,
+  FaBox,
+  FaTruck,
+  FaUserFriends,
+  FaListUl,
+} from "react-icons/fa";
+import { useTheme } from "./ThemeContext";
+import Logout from "../components/Logout";
+import "../styles/sidebar.css";
 
 function Sidebar() {
   const { isDarkMode } = useTheme();
@@ -12,47 +20,35 @@ function Sidebar() {
 
   const items = [
     {
-      label: 'Dashboard',
+      label: "Dashboard",
       icon: <FaTachometerAlt />,
-      key: '/dashboard/',
+      key: "/dashboard/",
     },
-   
+
     {
-      label: 'Order',
-      icon: <FaBox />,
-      key: '/dashboard/order',
-    },
-    {
-      label: 'Products',
-      icon: <FaBox />,
-      key: '/dashboard/product',
-    },
-    {
-      label: 'Resources',
-      icon: <FaTruck />,
-      key: '/dashboard/resource',
-    },
-    {
-      label: 'Consumers',
-      icon: <FaUserFriends />,
-      key: '/dashboard/consumer',
-    },
-    {
-      label: 'Order Group',
+      label: "Order",
       icon: <FaListUl />,
-      dropdownIcon: <FaCaretDown />,
-      key: '/ordergroup',
-      isDropdown: true,
-      dropdownItems: [
-        { label: 'Order List', key: '/dashboard/orderList' },
-        { label: 'Delivery List', key: '/dashboard/ordergroup' },
-        { label: 'Recurring Orders', key: '/dashboard/recurringOrders' },
-      ],
+      key: "/dashboard/order",
     },
     {
-      label: 'Settings',
+      label: "Products",
+      icon: <FaBox />,
+      key: "/dashboard/product",
+    },
+    {
+      label: "Resources",
+      icon: <FaTruck />,
+      key: "/dashboard/resource",
+    },
+    {
+      label: "Consumers",
+      icon: <FaUserFriends />,
+      key: "/dashboard/consumer",
+    },
+    {
+      label: "Settings",
       icon: <FaCog />,
-      key: '/dashboard/settings',
+      key: "/dashboard/settings",
     },
   ];
 
@@ -67,37 +63,49 @@ function Sidebar() {
   };
 
   return (
-    <div className={`sidebarpage ${isDarkMode ? 'sidebarpage--dark' : 'sidebarpage--light'}`}>
+    <div
+      className={`sidebarpage ${
+        isDarkMode ? "sidebarpage--dark" : "sidebarpage--light"
+      }`}
+    >
       <ul className="sidebarpage__content">
-      {items.map((item, index) => (
-  <li className="sidebarpage__item" key={index}>
-    {item.isDropdown ? (
-      <>
-        <div className="sidebarpage__link" onClick={toggleDropdown}>
-          {item.icon}
-          <span className="sidebarpage__text">{item.label}</span>
-          {item.dropdownIcon} 
-        </div>
-        <ul className={`sidebarpage__dropdown ${isDropdownOpen ? 'sidebarpage__dropdown--open' : ''}`}>
-          {item.dropdownItems.map((dropdownItem, idx) => (
-            <li className="sidebarpage__dropdown-item" key={idx}>
-              <Link to={dropdownItem.key}>
-                <span className='sidebarpage__dropdown_text'>{dropdownItem.label}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </>
-    ) : (
-      <div className="sidebarpage__link" onClick={() => handleClick(item.key)}>
-        {item.icon}
-        <span className="sidebarpage__text">{item.label}</span>
-      </div>
-    )}
-  </li>
-))}
+        {items.map((item, index) => (
+          <li className="sidebarpage__item" key={index}>
+            {item.isDropdown ? (
+              <>
+                <div className="sidebarpage__link" onClick={toggleDropdown}>
+                  {item.icon}
+                  <span className="sidebarpage__text">{item.label}</span>
+                  {item.dropdownIcon}
+                </div>
+                <ul
+                  className={`sidebarpage__dropdown ${
+                    isDropdownOpen ? "sidebarpage__dropdown--open" : ""
+                  }`}
+                >
+                  {item.dropdownItems.map((dropdownItem, idx) => (
+                    <li className="sidebarpage__dropdown-item" key={idx}>
+                      <Link to={dropdownItem.key}>
+                        <span className="sidebarpage__dropdown_text">
+                          {dropdownItem.label}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <div
+                className="sidebarpage__link"
+                onClick={() => handleClick(item.key)}
+              >
+                {item.icon}
+                <span className="sidebarpage__text">{item.label}</span>
+              </div>
+            )}
+          </li>
+        ))}
 
-        
         <li className="sidebarpage__item sidebarpage__item--logout">
           <FaSignOutAlt className="sidebarpage__icon" />
           <span className="sidebarpage__text">

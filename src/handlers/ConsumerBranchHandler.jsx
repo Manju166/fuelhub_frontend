@@ -1,5 +1,9 @@
-import { useMutation } from '@apollo/client';
-import { CREATE_OUTLET, UPDATE_OUTLET, DELETE_OUTLET } from '../mutations/ConsumerBranchMutation';
+import { useMutation } from "@apollo/client";
+import {
+  CREATE_OUTLET,
+  UPDATE_OUTLET,
+  DELETE_OUTLET,
+} from "../mutations/ConsumerBranchMutation";
 
 export const useAddOutlet = (refetch, setIsModalOpen, setErrorMessage) => {
   const [createOutlet] = useMutation(CREATE_OUTLET);
@@ -8,7 +12,7 @@ export const useAddOutlet = (refetch, setIsModalOpen, setErrorMessage) => {
     const { name, address } = formData;
 
     if (!name.trim() || !address.trim()) {
-      setErrorMessage('Name and Address cannot be empty.');
+      setErrorMessage("Name and Address cannot be empty.");
       return;
     }
 
@@ -20,12 +24,12 @@ export const useAddOutlet = (refetch, setIsModalOpen, setErrorMessage) => {
       if (data.createOutlet.outlet) {
         refetch();
         setIsModalOpen(false);
-        setErrorMessage('');
+        setErrorMessage("");
       } else {
-        setErrorMessage('Failed to add outlet.');
+        setErrorMessage("Failed to add outlet.");
       }
     } catch (error) {
-      setErrorMessage('An error occurred while adding the outlet.');
+      setErrorMessage("An error occurred while adding the outlet.");
     }
   };
 
@@ -51,7 +55,7 @@ export const useEditOutlet = (refetch, setIsModalOpen, setErrorMessage) => {
       refetch();
       setIsModalOpen(false);
     } catch (error) {
-      setErrorMessage('Failed to update outlet.');
+      setErrorMessage("Failed to update outlet.");
     }
   };
 
@@ -66,7 +70,7 @@ export const useDeleteOutlet = (refetch) => {
       await deleteOutlet({ variables: { id: outlet.id } });
       refetch();
     } catch (err) {
-      console.error('Error deleting outlet:', err);
+      console.error("Error deleting outlet:", err);
     }
   };
 

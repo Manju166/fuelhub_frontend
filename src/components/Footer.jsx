@@ -6,7 +6,7 @@ import { useTheme } from './ThemeContext';
 
   return (
     <div className={`footer ${isDarkMode ? 'footer--dark' : 'footer--light'}`}>
-      <p>Copyright ©2023 FleetPanda Pvt Ltd. All rights reserved.</p>
+      <p>Copyright ©2024 FuelHub Pvt Ltd. All rights reserved.</p>
     </div>
   )
 }

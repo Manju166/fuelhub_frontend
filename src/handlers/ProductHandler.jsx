@@ -1,5 +1,9 @@
 import { useMutation } from "@apollo/client";
-import { CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT } from "../mutations/ProductMutation";
+import {
+  CREATE_PRODUCT,
+  UPDATE_PRODUCT,
+  DELETE_PRODUCT,
+} from "../mutations/ProductMutation";
 
 export const useAddProduct = (refetch, setIsModalOpen, setErrorMessage) => {
   const [createProduct] = useMutation(CREATE_PRODUCT);
@@ -31,7 +35,7 @@ export const useAddProduct = (refetch, setIsModalOpen, setErrorMessage) => {
     }
   };
   return handleAdd;
-}
+};
 export const useEditProduct = (refetch, setIsModalOpen, setErrorMessage) => {
   const [updateProduct] = useMutation(UPDATE_PRODUCT);
 
@@ -45,17 +49,17 @@ export const useEditProduct = (refetch, setIsModalOpen, setErrorMessage) => {
       setErrorMessage("All fields are required.");
       return;
     }
-  
+
     try {
       const { data } = await updateProduct({
-        variables: { 
-          productDetails: { 
-            id: selectedProduct.id, // Ensure the ID is included
-            ...formData 
-          } 
+        variables: {
+          productDetails: {
+            id: selectedProduct.id,
+            ...formData,
+          },
         },
       });
-  
+
       if (data.updateProduct.product) {
         refetch();
         setIsModalOpen(false);
@@ -69,7 +73,7 @@ export const useEditProduct = (refetch, setIsModalOpen, setErrorMessage) => {
     }
   };
 
-  return handleUpdate; // Return handleUpdate so it can be used
+  return handleUpdate;
 };
 
 export const useDeleteProduct = (refetch) => {

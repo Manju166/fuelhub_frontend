@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const CREATE_OUTLET = gql`
   mutation CreateOutlet($outletDetails: OutletInput!) {
@@ -44,4 +44,3 @@ export const DELETE_OUTLET = gql`
     }
   }
 `;
-

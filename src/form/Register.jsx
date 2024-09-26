@@ -1,19 +1,22 @@
-import React from 'react';
-import { Form, Input, Button, Select, Typography } from 'antd';
-import { MailOutlined, LockOutlined } from '@ant-design/icons';
-import { useMutation, useQuery } from '@apollo/client';
-import { useNavigate } from 'react-router-dom'; 
-import REGISTER_MUTATION from '../mutations/RegisterMutation';
-import '../styles/register.css';
-import { GET_TENANTS } from '../query/TenantQuery';
+import React from "react";
+import { Form, Input, Button, Select, Typography } from "antd";
+import { MailOutlined, LockOutlined } from "@ant-design/icons";
+import { useMutation, useQuery } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import REGISTER_MUTATION from "../mutations/RegisterMutation";
+import "../styles/register.css";
+import { GET_TENANTS } from "../query/TenantQuery";
 
 const { Option } = Select;
 const { Text } = Typography;
 
 const Register = () => {
   const { data: tenantData } = useQuery(GET_TENANTS);
-  const [register, { loading: registerLoading, error: registerError, data: registerData }] = useMutation(REGISTER_MUTATION);
-  const navigate = useNavigate(); 
+  const [
+    register,
+    { loading: registerLoading, error: registerError, data: registerData },
+  ] = useMutation(REGISTER_MUTATION);
+  const navigate = useNavigate();
 
   const onFinish = (values) => {
     register({
@@ -23,11 +26,13 @@ const Register = () => {
         passwordConfirmation: values.passwordconfirm,
         tenantId: parseInt(values.tenant, 10),
       },
-    }).then(() => {
-      navigate('/');
-    }).catch(err => {
-      console.error('Mutation error:', err);
-    });
+    })
+      .then(() => {
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error("Mutation error:", err);
+      });
   };
 
   if (registerData) {
@@ -47,7 +52,7 @@ const Register = () => {
         <Form.Item
           name="tenant"
           label="Tenant"
-          rules={[{ required: true, message: 'Please select your tenant!' }]}
+          rules={[{ required: true, message: "Please select your tenant!" }]}
         >
           <Select placeholder="Select your tenant">
             {tenantData?.tenants?.map((tenant) => (
@@ -62,8 +67,8 @@ const Register = () => {
           name="email"
           label="Email Address"
           rules={[
-            { required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'The input is not a valid email!' },
+            { required: true, message: "Please input your email!" },
+            { type: "email", message: "The input is not a valid email!" },
           ]}
         >
           <Input
@@ -76,7 +81,7 @@ const Register = () => {
           name="password"
           label="Password"
           rules={[
-            { required: true, message: 'Please input your password!' },
+            { required: true, message: "Please input your password!" },
             // { min: 8, message: 'Password must be at least 8 characters long!' },
             // Uncomment the following pattern for stronger password rules
             // {
@@ -95,16 +100,16 @@ const Register = () => {
         <Form.Item
           name="passwordconfirm"
           label="Confirm Password"
-          dependencies={['password']}
+          dependencies={["password"]}
           hasFeedback
           rules={[
-            { required: true, message: 'Please confirm your password!' },
+            { required: true, message: "Please confirm your password!" },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
+                if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error('Passwords do not match!'));
+                return Promise.reject(new Error("Passwords do not match!"));
               },
             }),
           ]}
@@ -116,7 +121,12 @@ const Register = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" block loading={registerLoading}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            loading={registerLoading}
+          >
             Register
           </Button>
         </Form.Item>
